@@ -10,7 +10,8 @@
 
   \begin{itemize}
   \item These slides are adapted from ones originally created by
-    \href{https://www.dpag.ox.ac.uk/team/rui-ponte-costa}{Rui Ponte Costa}. 
+    \href{https://www.dpag.ox.ac.uk/team/rui-ponte-costa}{Rui Ponte
+      Costa} and later edited by Edwin Simpson. 
   \end{itemize}
   
 \end{titledslide}
@@ -53,7 +54,7 @@
 \begin{frame}[fragile]
 
   \frametitle{The different forms of machine learning}
-  \centerline{\includegraphics[scale=0.2]{world_data.pdf}}
+  \centerline{\includegraphics[scale=0.2]{../figures/world_data.pdf}}
   \begin{itemize}
   \item ML attempts to learn \textbf{models} of the world
     \begin{itemize}
@@ -71,7 +72,7 @@
 \begin{frame}[fragile]
 
   \frametitle{The different forms of machine learning}
-  \centerline{\includegraphics[scale=0.2]{world_data.pdf}}
+  \centerline{\includegraphics[scale=0.2]{../figures/world_data.pdf}}
   \begin{itemize}
   \item ML attempts to \textbf{learn} models of the world
     \begin{itemize}
@@ -94,7 +95,7 @@
 
   \frametitle{Unsupervised learning}
   Only the input data is provided and models learn to extract patterns from the data.\vspace{5pt}
-  \centerline{\includegraphics[scale=0.5]{unsupervised_learning.pdf}}
+  \centerline{\includegraphics[scale=0.5]{../figures/unsupervised_learning.pdf}}
   
   \uncover<2->{
     Example tasks \footnote{Note that virtually all models that do not use explicit teaching signals, such as targets/labels or rewards are unsupervised.}:
@@ -111,7 +112,7 @@
 
   \frametitle{Supervised learning\vspace{3pt}}
   Each input is paired with an output -- a ``label'' or ``target'' -- and the model is trained to minimise the error (difference) between its output and the target.\vspace{5pt}
-  \centerline{\includegraphics[scale=0.45]{supervised_learning.pdf}}
+  \centerline{\includegraphics[scale=0.45]{../figures/supervised_learning.pdf}}
   
   \uncover<2->{
     Example tasks:
@@ -140,7 +141,7 @@
   of actions.  It is inspired by animal behaviour. RL is seen as a
   field on its own -- \emph{we do \textbf{not} teach RL on this
     unit}.\vspace{5pt}
-  \centerline{\includegraphics[scale=0.5]{reinforcement_learning.pdf}}
+  \centerline{\includegraphics[scale=0.5]{../figures/reinforcement_learning.pdf}}
 
   \uncover<2->{ Examples:
     \begin{itemize}
@@ -168,11 +169,11 @@
 
   \uncover<2->{Example from \emph{scikit-learn} \begin{small}(click
       \href{https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html}{here})\end{small}:}
-  \centerline{\uncover<2->{\includegraphics[scale=0.28]{under_overfitting_1.png}
+  \centerline{\uncover<2->{\includegraphics[scale=0.28]{../figures/under_overfitting_1.png}
       \hspace{6pt}}
-    \uncover<3->{\includegraphics[scale=0.28]{under_overfitting_2.png}
+    \uncover<3->{\includegraphics[scale=0.28]{../figures/under_overfitting_2.png}
       \hspace{6pt}}
-    \uncover<4->{\includegraphics[scale=0.28]{under_overfitting_3.png}}}
+    \uncover<4->{\includegraphics[scale=0.28]{../figures/under_overfitting_3.png}}}
 
   % \centerline{\includegraphics[scale=0.3]{Figures2/Google_ML_trend-01.png}}
 \end{frame}
@@ -188,7 +189,7 @@
     underlies model selection.}\\ \vspace{6pt}
   A common method is to \emph{split the dataset}. Lets look again at the data used in the previous slide\\
   \vspace{10pt}
-  \centerline{\includegraphics[scale=0.5]{model_selection_1.png}}
+  \centerline{\includegraphics[scale=0.5]{../figures/model_selection_1.png}}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -204,7 +205,7 @@
       dataset)\end{small}}
 \end{itemize}
 \vspace{10pt}
-\centerline{\includegraphics[scale=0.5]{model_selection_2.png} \hspace{6pt} \uncover<2->{\includegraphics[scale=0.5]{model_selection_3.png}}}
+\centerline{\includegraphics[scale=0.5]{../figures/model_selection_2.png} \hspace{6pt} \uncover<2->{\includegraphics[scale=0.5]{../figures/model_selection_3.png}}}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -222,7 +223,7 @@
       dataset)\end{small}.
 \end{itemize}
 \vspace{10pt}
-\centerline{\includegraphics[scale=0.5]{model_selection_4.png}}
+\centerline{\includegraphics[scale=0.5]{../figures/model_selection_4.png}}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -243,7 +244,7 @@
       method.}\end{small}
 \end{itemize}
 \vspace{10pt}
-\centerline{\includegraphics[scale=0.4]{cross_validation.png}}
+\centerline{\includegraphics[scale=0.4]{../figures/cross_validation.png}}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -290,7 +291,7 @@
         the output variables.
       \end{itemize}}
   \end{itemize}
-  \centerline{\includegraphics[scale=0.15]{curve_dim.png}}
+  \centerline{\includegraphics[scale=0.15]{../figures/curve_dim.png}}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,9 +320,9 @@
         nonparametric models are hybrid models with parametric
         (non-flexible) components.}}\vspace{10pt}
   \end{itemize}
-  \centerline{\uncover<1->{\includegraphics[scale=0.45]{parametric_model.png}
+  \centerline{\uncover<1->{\includegraphics[scale=0.45]{../figures/parametric_model.png}
       \hspace{6pt}}
-    \uncover<2->{\includegraphics[scale=0.45]{nonparametric_model.png}
+    \uncover<2->{\includegraphics[scale=0.45]{../figures/nonparametric_model.png}
       \hspace{6pt}}}
 
 \end{frame}
@@ -339,7 +340,7 @@
     parameters $\theta = \{a, b\}$, where $a$ is the slope and $b$ the
     y-intercept.\vspace{10pt}
 
-    \centerline{\includegraphics[scale=0.5]{boston_linear1.png}}}
+    \centerline{\includegraphics[scale=0.5]{../figures/boston_linear1.png}}}
   
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -360,9 +361,9 @@
         function of data.} that automatically detects which polynomial
       functions to use.\end{small} \vspace{5pt}}
 
-  \centerline{\uncover<2->{\includegraphics[scale=0.4]{boston_crimerate_lessdata.pdf}
+  \centerline{\uncover<2->{\includegraphics[scale=0.4]{../figures/boston_crimerate_lessdata.pdf}
       \hspace{6pt}}
-    \uncover<3->{\includegraphics[scale=0.4]{boston_crimerate.pdf}}}
+    \uncover<3->{\includegraphics[scale=0.4]{../figures/boston_crimerate.pdf}}}
 
   % \centerline{\includegraphics[scale=0.45]{boston_crimerate.png}}}
 \end{frame}
@@ -377,7 +378,7 @@
 \vspace{12pt}
 
 \uncover<2->{\item Quiz time! Go to Blackboard unit page $\gg$ Quizzes $\gg$ Lecture 1.  Should take you less than 3 minutes
-\centerline{\includegraphics[scale=0.3]{BB.png}\vspace{10pt}}
+\centerline{\includegraphics[scale=0.3]{../figures/BB.png}\vspace{10pt}}
 }
 \end{itemize}
 \end{frame}
