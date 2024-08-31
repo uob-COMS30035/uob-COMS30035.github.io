@@ -1,7 +1,8 @@
 \documentclass[10pt]{beamer}
 
 \newcommand{\lectnum}{L04}
-\newcommand{\lecttitle}{Revisiting Regression}
+\newcommand{\lecttitle}{Linear Regresssion, Linear Discriminant and
+  Logistic Regression}
 
 \input{../preamble.tex}
 
@@ -91,7 +92,7 @@ y_i = a_0 + a_1 x_i
 R(a,b) = \sum_{i=1}^N {(y_i - (a + bx_i))^2}
 \nonumber
 \end{equation}
-\item This is the \textcolor{blue}{sum of residuals}.
+\item This is the \textcolor{blue}{sum of squared residuals}.
 \item A method which gives a closed form solution is to minimise the sum of squared vertical offsets of the points from the line, \textbf{\textcolor{blue}{Method of Least-Squares}}
 \end{itemize}
 \vspace{6pt}
@@ -245,164 +246,6 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
 
 \end{frame}
 
-%\begin{frame}[fragile]
-%\frametitle{MLE: 1. Define likelihood}
-%
-%Given a set of N data points - $x_i$ is length and $y_i$ is weight in our \textit{fishy} example
-%\begin{equation*}
-%D = \{ (x_1, y_1), (x_2, y_2), \cdots, (x_N, y_N) \}
-%\end{equation*}
-%
-%\begin{itemize}
-%\uncover<2->{\item The probabilistic approach would:
-%\begin{itemize}
-%\item derive expression for conditional probability of observing data $D$ given parameters $\boldsymbol{\theta} = \{b, \sigma\}$
-%\begin{equation*}
-%p(D | \theta)
-%\end{equation*}}
-%\vspace{6pt}
-%
-%%\uncover<3->{\item using observed data, find the parameter value that maximises the conditional probability (or likelihood)
-%%\begin{equation*}
-%%a_{ML} = arg\,max_a p(D|a)
-%%\end{equation*}
-%\end{itemize}
-%\end{itemize}
-%
-%\end{frame}
-
-%\begin{frame}[fragile]
-%\frametitle{MLE: 1. Define likelihood}
-%
-%Given a set of N data points
-%\begin{equation*}
-%D = \{ (x_1, y_1), (x_2, y_2), \cdots, (x_N, y_N) \}
-%\end{equation*}
-%
-%\uncover<2->{Assume that observations are independent - a common assumption often referred to as \textbf{i.i.d. independent and identically distributed} - then :
-%\begin{equation*}
-%p(D|\theta) = \prod\limits_{i=1}^N {p(y_i | x_i, \theta)}
-%\end{equation*}}
-%
-%\uncover<3->{Given $y_i = b \, x_i + \epsilon$, and $\epsilon$ is $\mathcal{N}(0, \sigma^2)$, then
-%\begin{equation*}
-%p(y_i | x_i, \theta) \sim \mathcal{N} (b x_i, \sigma^2)
-%\end{equation*}}
-%
-%\uncover<4->{For a large sample:
-%\begin{itemize}
-%\item The average of $y_i$ value will be $b \, x_i$}
-%\uncover<5->{\item The `spread' or variance will be the same as for $\epsilon$, defined by $\sigma^2$}
-%\end{itemize}
-%
-%\end{frame}
-%
-%\begin{frame}[fragile]
-%\frametitle{MLE: 1. Define likelihood}
-%
-%The conditional probability (for all data) is thus formulated as
-%\begin{align*}
-%p(D|\theta) &= \prod\limits_{i=1}^N{p(y_i | x_i, \theta)} \\
-% &= \prod\limits_{i=1}^N {\frac{1}{\sqrt{2 \pi} \sigma} e^{-\frac{1}{2}\frac{(y_i - bx_i)^2}{\sigma^2}}}
-%\end{align*}
-%
-%\end{frame}
-%
-%
-%
-%
-%
-%
-%\begin{frame}[fragile]
-%\frametitle{MLE: 2. Take natural logarithm}
-%
-%We will focus on parameter $b$ for the next steps,
-%\vspace*{-10pt}
-%
-%{\small
-%\begin{align*}
-%b_{ML} &= arg\,max_b \, p(D|\theta)\\
-%\uncover<2->{&= arg\,max_b \prod\limits_{i=1}^N {\frac{1}{\sqrt{2 \pi} \sigma} e^{-\frac{1}{2} \frac{(y_i - bx_i)^2}{\sigma^2}}}}\\
-%\uncover<3->{&= arg\,max_b \ln{\Bigl(\prod\limits_{i=1}^N {\frac{1}{\sqrt{2 \pi} \sigma} e^{-\frac{1}{2} \frac{(y_i - bx_i)^2}{\sigma^2}}}\Bigr)} \qquad \textcolor{orange}{\text{(use $\ln$ trick)}}}\\
-% \uncover<4->{&= arg\,max_b \sum\limits_{i=1}^N \ln{\Bigl(\frac{1}{\sqrt{2 \pi} \sigma} e^{-\frac{1}{2} \frac{(y_i - bx_i)^2}{\sigma^2}}\Bigr)} \qquad \textcolor{orange}{\text{($\ln$ prop. 1)}}}\\
-% \uncover<5->{&= arg\,max_b \sum\limits_{i=1}^N \ln{\frac{1}{\sqrt{2 \pi} \sigma} -{\frac{(y_i - bx_i)^2}{2\sigma^2}}} \qquad \textcolor{orange}{\text{($\ln$ prop. 2)}}}\\
-% \uncover<6->{&=arg\,max_b \sum\limits_{i=1}^N {-\frac{1}{2\sigma^2}(y_i - b x_i)^2} \qquad \textcolor{orange}{\text{(discard no-b terms $\ln{\frac{1}{\sqrt{2 \pi} \sigma}}$)}}}\\
-% \uncover<7->{&=arg\,min_b \sum\limits_{i=1}^N {\frac{1}{2\sigma^2}(y_i - bx_i)^2}\qquad \textcolor{orange}{\text{(switch to minimisation form.)}}}\\
-%\end{align*}}
-%
-%\end{frame}
-%
-%\begin{frame}[fragile]
-%\frametitle{Data Modelling - Deterministic vs Probabilistic}
-%
-%\begin{itemize}
-%\item Deterministic Least Squares [Lecture 3]:
-%\begin{equation*}
-%b_{LS} = arg\,min_b \, R(b,a=0) = arg\,min_b \sum_i (y_i - b\, x_i)^2
-%\end{equation*}
-%\item Probabilistic Maximum Likelihood:
-%\begin{equation*}
-%b_{ML} = arg\,min_b \sum_i  \textcolor{blue}{\frac{1}{2\sigma^2}}(y_i - b\, x_i)^2
-%\end{equation*}
-%
-%\uncover<2->{\item \textcolor{blue}{probabilistic model explicit considers uncertainty, $\sigma^2$.}}
-%%\uncover<3->{\item \textbf{\textcolor{blue}{Note:}} ML answer here assumes uncertainty is normally distributed}
-%\end{itemize}
-%
-%\end{frame}
-%
-%\begin{frame}[fragile]
-%\frametitle{MLE: 3. Take derivatives and 4. Find solution}
-%
-%To simplify the calculations here we assume $\sigma = 1$,
-%\begin{equation*}
-%b_{ML} = arg\,min_b \sum_i \frac{1}{2}(y_i - b\, x_i)^2
-%\end{equation*}
-%
-%\uncover<2->{To find the minimum, calculate the derivative
-%\begin{equation*}
-%\frac{d}{db}{\sum_i \frac{1}{2}(y_i - b x_i)^2} = -\sum_i x_i (y_i - b x_i)
-%\end{equation*}}
-%
-%\uncover<3->{and equate it to zero
-%\begin{align*}
-%&-\sum_i x_i (y_i - b_{ML} x_i) = 0\\
-%&\sum_i x_i y_i - b_{ML} \sum_i x_i^2 = 0\\
-%&b_{ML} = \frac{\sum_i {y_i x_i}}{\sum_i x_i^2}
-%\end{align*}}
-%
-%\end{frame}
-
-%\begin{frame}[fragile]
-%\frametitle{MLE: example}
-%
-%\begin{block}{Example: normal distribution (parameter $a_1$)}
-%\begin{enumerate}
-%\vspace{6pt}
-%\uncover<2->{\item Determine $\theta$, $D$ and expression for likelihood $p(D|\theta)$}
-%\uncover<3->{\\$
-%p(D|{a_1}) = \prod\limits_{i=1}^N {\frac{1}{\sqrt{2 \pi} \sigma} e^{-\frac{1}{2}\frac{(y_i - {a_1}x_i)^2}{\sigma^2}}}$}
-%\vspace{6pt}
-%\uncover<4->{\item Take the natural logarithm of the likelihood}
-%\uncover<5->{\\$
-%{a_1}_{ML} = arg\,min_{a_1} \sum_i \frac{1}{2\sigma^2}(y_i - {a_1}\, x_i)^2$
-%}
-%\vspace{6pt}
-%\uncover<6->{\item Take the derivative of $\ln p(D|\theta)$ w.r.t. $\theta$. If $\theta$ is a multi-dimensional vector, take partial derivatives \footnote{For simplicity we set $\sigma = 1$}}
-%\uncover<7->{\\$
-%\frac{d}{d{a_1}}{\sum_i \frac{1}{2}(y_i - {a_1} x_i)^2} = -\sum_i x_i (y_i - {a_1} x_i)
-%$
-%}
-%\vspace{6pt}
-%\uncover<7->{\item Set derivative(s) to 0 and solve for $b$}
-%\uncover<8->{\\$
-%{a_1}_{ML} = \frac{\sum_i {y_i x_i}}{\sum_i x_i^2}
-%$
-%}
-%\end{enumerate}
-%\end{block}
-%
-%\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{titledslide}{Least Squares and MLE for Linear Regression}
 
@@ -431,6 +274,188 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
 \uncover<5->{\centerline{${a_1}_{ML}^{D_1} > {a_1}_{ML}^{D_2} \:$ \small{[slope]} and \textcolor{red}{$\: \sigma_{ML}^{D_1} < \sigma_{ML}^{D_2}$ \small{[uncertainty\footnote{The uncertainty ($\sigma$) is represented by the light green bar in the plots. Test it yourself.}]}}}}
 
 \end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Textbooks}
+We will follow parts of the Chapter 4 and 5 of the Bishop book:
+\begin{itemize}
+	\item Bishop, C. M., Pattern recognition and machine learning (2006). Available for free \href{https://www.microsoft.com/en-us/research/people/cmbishop/}{\underline{here}.}	\vspace{10pt}
+\vspace{10pt}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Agenda}
+	\begin{itemize}
+		\item Discriminant functions
+		\item Logistic regression			
+		% \item Perceptron
+		% \item Neural networks (multi-layer perceptron)
+		% \begin{itemize}
+		% 	\item Architecture
+		% 	\item The backpropagation algorithm
+		% 	\item Gradient descent
+		%\end{itemize}
+%		\item Optimising nnets using backprop
+%		\item Highly flexible model $\rightarrow$ overfitting: early stopping/drop-out.
+%		\item Probabilistic variants [see Bishop]
+
+%		\item Model selection: training/testing, cross-validation
+%		\item Parametric vs non-parametric models
+%		\item Decision theory (and information theory?)			
+	\end{itemize}
+See: \begin{small}[Chapter 5, Bishop]\end{small}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\frametitle{Classification}
+
+\begin{itemize}
+\item It is the classical example of \textbf{supervised learning} \vspace{10pt}
+\item Goal: Classify input data into one of $K$ classes \vspace{10pt}
+\uncover<2->{\item Model: \emph{Discriminant function}:\vspace{5pt}
+	\begin{itemize}
+		\item A function that takes an input vector $x$ and assigns it to class $C_k$. 
+		For simplicity we will focus on $K=2$ and will first study linear functions (see Bishop for the general cases).
+	\end{itemize}}
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}[fragile]
+\frametitle{Linear discriminant function}
+
+\begin{itemize}
+\item The simplest linear discriminant (LD) is $\boxed{y(x) = w_0 + \bm{w^Tx}}$
+	\begin{itemize}
+		\item \textcolor{darkgray}{where $y$ is used to predicted class $C_k$, $x$ is the input vector (feature values)
+		\item $w_0$ is a scalar, which we call \emph{bias}
+		\item $w_T$ is our vector of parameters, which we call \emph{weights}}		
+	\end{itemize}\vspace{5pt}
+\uncover<2->{\item This looks like linear regression! Except the next step...}
+\uncover<3->{\item For $K=2$: An input vector $x$ is assigned to class $C_1$ if $y(x) \geq 0$ and to class $C_2$ otherwise.}
+\uncover<4->{\item Optimisation: least-squares (as for regression) \footnote{See Bishop p184 and p190.}, where we want to minimise the cost or error function:
+\end{itemize}
+$\boxed{E = \frac{1}{2}\sum^N_{n=1} (\bm{w}^T\bm{x}_n + w_0 - t_n)^2}$ \small where $t_n$ are the targets/labels (e.g. $t_1$ = $C_1$).}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{LD and linear separability}
+
+\begin{example}
+\emph{Linear separability} is when two sets of points are separable by a line. We generated two sets of points using two Gaussians to illustrate this point, which can easily be fit by a LD. A \emph{decision boundary} is the boundary that separates the two given classes, which our models will try to find.\\	
+\centerline{\includegraphics[scale=0.4]{../figures/linear_separable.png}}
+\end{example}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Linear separability vs nonlinear separability}
+
+\begin{example}
+Which datasets \textbf{are} and \textbf{are not} linearly separable\footnote{Example from Sklearn \href{https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html}{here}.}? \vspace{5pt}\\	
+\centerline{\includegraphics[scale=0.5]{../figures/inputdata.png}}
+\end{example}
+
+\uncover<2->{Only the first dataset is linearly separable!}
+
+\end{frame}
+
+
+
+
+\begin{frame}[fragile]
+\frametitle{Linear discriminant}
+
+\begin{example}
+Using sklearn we fitted a LD to the data: \vspace{5pt}\\	
+\centerline{\includegraphics[scale=0.5]{../figures/ld_class.png}}
+\end{example}
+
+As expected, the LD model only does a good job in finding a good separation in the first dataset.
+
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile]
+\frametitle{Logistic regression}
+
+\begin{itemize}
+\item We use a logistic function to obtain the probability of class $C_k$: $\boxed{y(\bm{x}) = \sigma(\bm{w^Tx})}$ where $\sigma$ denotes the logistic sigmoid function (s-shaped), for example:
+\centerline{\includegraphics[scale=0.2]{../figures/logistic_function.png}}
+\uncover<2->{\item such that when $y \to 0$ we choose class 2 and $y \to 1$ class 1.
+\item Taking a probabilistic view: 
+
+$p(C_1|\bm{x}) = y(\bm{x})$, and $p(C_2|\bm{x}) = 1- p(C_1|\bm{x})$.}
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Logistic regression -- maximum likelihood estimation}
+
+Follow MLE recipe:
+\begin{enumerate}
+	\item Define likelihood: For a dataset $\{x_n, t_n\}$, where the targets $t_n \in \{0,1\}$ we have $p(\bm{t}|\bm{x},\bm{w}) = \mathlarger{\prod_{n=1}^N} y_n^{t_n} (1 - y_n)^{1-t_n}$ where $y_n = p(C_1|x_n)$. \footnote{The exponent selects the probability of the target class (i.e. if $t_n = 1$ we get $y_n$; if $t_n = 0$ we get $1-y_n$).}
+\uncover<2->{	\item Take negative logarithm of the likelihood \footnote{Note that we used the logarithm product and power rule.}: $-ln\:p(\bm{t}|\bm{x},\bm{w}) = - \mathlarger{\sum_{n=1}^N}\{t_n ln\:y_n + (1-t_n)ln(1-y_n)\}$}
+\uncover<3->{	\item Calculate the derivative w.r.t. the parameters $\bm{w}$:\footnote{This solution makes sense since we want to optimise the difference between the model output $y$ and the desired targets $t$.} \\ $\frac{d\:ln\:p(\bm{t}|\bm{x},\bm{w})}{d \bm{w}} = \mathlarger{\sum_{n=1}^N} (y_n - t_n)x_n$ }
+\uncover<4->{	\item Now we can use Eq. above to directly update $\bm{w}$ using the data $x$.}
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{MLE using Gradient Descent}
+\includegraphics[scale=0.5]{../figures/gradient_descent.png}
+\begin{itemize}
+\item Start with random weight values 
+\item We want to adjust each weight $w$  to minimise negative log likelihood: move downhill to the minimum
+\item The derivative represents the slope: $\frac{d\:ln\:p(\bm{t}|\bm{x},\bm{w})}{d \bm{w}} = \mathlarger{\sum_{n=1}^N} (y_n - t_n)x_n$
+\item Increase or decrease $w$ by a small amount in the downward direction 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Logistic regression -- maximum likelihood estimation}
+
+More details on calculating the derivative:
+\begin{enumerate}
+	\item	From here $-ln\:p(\bm{t}|\bm{x},\bm{w}) = - \mathlarger{\sum_{n=1}^N}\{t_n ln\:y_n + (1-t_n)ln(1-y_n)\}$
+\uncover<2->{	\item We get $\mathlarger{\sum_{n=1}^N}\{ - \frac{t_n}{y_n} + \frac{(1-t_n)}{1-y_n}\} \{y_n(1-y_n)\}x_n$ \footnote{We used the chain rule and $d\: ln(x) = 1/x$. We also used the derivative of the sigmoid $d y_n = y(1-y_n)$.}}
+\uncover<3->{	\item The above simplifies to $\mathlarger{\sum_{n=1}^N}\{ - t_n (1-y_n) + (1-t_n)y_n\}x_n$}
+\uncover<4->{	\item And in turn to $\mathlarger{\sum_{n=1}^N}\{ y_n - t_n \} x_n$ \footnote{You can find the full derivation \href{https://uob-coms30035.github.io/Material/CrossEntropy.html}{here}.}}
+\end{enumerate}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile]
+\frametitle{Logistic regression}
+
+\begin{example}
+Using sklearn we fitted a logistic regression classifier to the data: \vspace{5pt}\\	
+\centerline{\includegraphics[scale=0.5]{../figures/LR_class.png}}
+\end{example}
+\small As you can see the results are very similar to LD, but because of probabilistic formulation we have an explicit probability of belonging to one or the other class (not shown); \underline{this can be very useful in real-world applications} (e.g. self-driving cars or cancer detection).
+\end{frame}
+
+
 
 \begin{frame}[fragile]
 \frametitle{Quiz time!}
