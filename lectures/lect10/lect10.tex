@@ -1,0 +1,579 @@
+\documentclass[10pt]{beamer}
+
+\newcommand{\lectnum}{L10}
+\newcommand{\lecttitle}{Markov Chain Monte Carlo}
+
+\input{../preamble.tex}
+\usetikzlibrary{bayesnet}
+
+\newcommand{\ci}{\ensuremath{\perp}}
+\newcommand{\params}{\ensuremath{\mathbf{w}}}
+\newcommand{\dualparams}{\ensuremath{\mathbf{a}}}
+\newcommand{\designm}{\ensuremath{{\bm \Phi}}}
+\newcommand{\xvec}{\ensuremath{\mathbf{x}}}
+\newcommand{\xvecn}{\ensuremath{\mathbf{x}_{n}}}
+\newcommand{\feat}{\ensuremath{\phi}}
+\newcommand{\gram}{\ensuremath{\mathbf{K}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The Bayesian approach}
+
+  \begin{itemize}
+  \item Conceptually the Bayesian approach is easy: the goal is to
+    compute the posterior distribution $P(\theta|D=d)$ where $\theta$
+    is the parameter vector and $d$ is the observed value of the data.
+  \item We choose a prior $P(\theta)$ and assume a particular
+    likelihood $P(D|\theta)$ and then Bayes theorem gives us
+    $P(\theta|D=d) \propto P(\theta)P(D=d|\theta)$.
+  \item If we choose a \emph{conjugate prior} for $P(\theta)$, then
+    representing and computing $P(\theta|D=d)$ is easy.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Problems for the Bayesian approach}
+
+  \begin{itemize}
+  \item ``For most probabilistic models of practical interest, exact
+    inference is intractable, and so we have to resort to some form of
+    approximation.'' \cite[p. 523]{bishop06:_patter_recog_machin_learn}.
+  \item We want to be able to just construct whatever joint
+    distribution $P(\theta,D)$ we think best models the
+    data-generating process and then compute $P(\theta|D=d)$.
+  \item However, with this flexibility there is a price: we may not
+    even be able to represent $P(\theta|D=d)$ easily, let alone
+    compute it.\pause
+  \item The solution is to give up on getting $P(\theta|D=d)$ exactly
+    and instead draw samples (of $\theta$) from $P(\theta|D=d)$ which
+    will allow us to approximately compute any posterior quantities,
+    e.g.\ the mean of $P(\theta|D=d)$.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Univariate sampling}
+
+  \begin{itemize}
+  \item We will assume throughout that we have some mechanism for
+    sampling from any \emph{univariate} distribution.
+  \item There are functions for sampling from a bunch of different
+    distributions in Python's
+    \href{https://docs.python.org/3/library/random.html}{random
+      module}. Also, to sample from a Gaussian you can use
+    \texttt{numpy.random.normal}.
+  \item If a multivariate distribution is described by a Bayesian
+    network then we can use \emph{ancestral sampling} to sample a
+    joint instantiation of the variables.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Ancestral sampling}
+
+  \[
+p(A,B,C,D,E)=p(A)p(B)p(C|A,B)p(D|C)p(E|B,C)
+\]
+
+  
+   \begin{tikzpicture}%[dgraph]
+ \node[latent] (x1) at (0,2.1) {$A$};
+ \node[latent] (x2) at (2,2.1) {$B$};
+ \node[latent] (x3) at (1,1) {$C$};
+ \node[latent] (x4) at (-0.2,0.1) {$D$};
+ \node[latent] (x5) at (2.5,-0.1) {$E$};
+ \edge{x1}  {x3};
+ \edge{x2} {x5};
+ \edge{x2} {x3};
+ \edge{x3} {x4};
+ \edge{x3}  {x5};
+ \end{tikzpicture}
+
+ \begin{itemize}
+ \item Just ensure that we sample values for all parents of a node
+   before we sample a value for that node (this is always possible due
+   to acyclicity).
+ \item So to sample from $p(A,B,C,D,E)$ we first sample values for $A$
+   and $B$, suppose we get the values $A=0,B=1$. We then sample a
+   value for $C$ from the conditional distribution $P(C|A=0,B=1)$, and
+   so on. \cite[\S8.1.2]{bishop06:_patter_recog_machin_learn}.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Sampling from marginal and conditional distributions}
+
+  \[
+    p(A,B,C,D,E)=p(A)p(B)p(C|A,B)p(D|C)p(E|B,C)
+  \]
+  
+  
+  \begin{itemize}
+  \item We can approximate any marginal distribution (say, $P(B,E)$)
+    by sampling full joint instantiations (by e.g.\ ancestral
+    sampling) and then only keeping the values of the variables in
+    the marginal.
+  \item We can use \emph{rejection sampling} to sample from
+    conditional distributions.
+  \item For example, to sample from $P(B,D|E=1)$ we sample from the
+    marginal distribution $P(B,D,E)$ and throw away those samples
+    where $E\neq 1$.
+  \item Rejection sampling is typically inefficient.
+  \end{itemize}
+   
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Approximating expectations}
+
+  \begin{itemize}
+  \item Often we want to compute expected values with respect to some
+    posterior distribution \cite[p. 524]{bishop06:_patter_recog_machin_learn}.
+  \end{itemize}
+
+  \begin{equation}
+    \label{eq:exp}
+    E[f] = \int f(\mathbf{z})p(\mathbf{z}) d\mathbf{z}
+  \end{equation}
+
+  \begin{itemize}
+  \item   If we draw independent samples $\mathbf{z}^{(l)}$, $l = 1, \dots, L$
+  from $p(\mathbf{z})$ then we can approximate $E[f]$ as follows:
+  \end{itemize}
+
+  \begin{equation}
+    \label{eq:approxexp}
+    \hat{f} = \frac{1}{L}\sum_{l=1}^{L}f(\mathbf{z}^{(l)})
+  \end{equation}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov chain Monte Carlo}
+
+  \begin{itemize}
+  \item If we can sample from a distribution then we have a simple way to
+    compute approximate values. But what if we cannot? \pause
+  \item If we can sample from \emph{a sequence of distributions} which
+    eventually reaches (or gets very close to) the desired
+    distribution, then we can adopt the following strategy:
+    \begin{enumerate}
+    \item Draw a sample from each distribution in this sequence.
+    \item Only keep the samples once we get `close enough' to the
+      desired distribution.
+    \end{enumerate}
+  \item This is the approach of Markov chain Monte Carlo (MCMC).
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov chains}
+
+  
+  ``A first-order Markov chain is defined to be a series of random
+  variables $\mathbf{z}^{(1)}, \dots, \mathbf{z}^{(M)}$ such that the
+  following conditional independence property holds for
+  $m \in \{1, \dots, M-1\}$''
+  \cite[p. 539]{bishop06:_patter_recog_machin_learn}.
+\begin{equation}
+p(\mathbf{z}^{(m+1)} |\mathbf{z}^{(1)} , . . . , \mathbf{z}^{(m)} ) = p(\mathbf{z}^{(m+1)} |\mathbf{z}^{(m)} )  
+\end{equation}
+
+\begin{itemize}
+\item $\mathbf{z}^{(m)}$ often represents (or can be imagined to
+  represent) the $m$th state of some dynamic system so that
+  $p(\mathbf{z}^{(m+1)} |\mathbf{z}^{(m)} )$ is a \emph{state
+    transition probability}. 
+\item If $p(\mathbf{z}^{(m+1)} |\mathbf{z}^{(m)} )$ is the same for all $m$ then the chain is \emph{homogeneous}.
+\item (We also need an \emph{initial distribution} $p(\mathbf{z}^{(1)})$.)
+\item Here's the Bayesian network representation of a Markov chain where $M=4$.
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}
+  \node [latent] (x1) {$x_1$};
+  \node[latent,right=of x1] (x2) {$x_2$};
+  \node[latent,right=of x2] (x3) {$x_3$};
+  \node[latent,right=of x3] (x4) {$x_4$};
+  \edge{x1} {x2};
+  \edge{x2} {x3};
+  \edge{x3} {x4};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+\item Sampling from a Markov chain is easy: it's just a special case
+  of ancestral sampling.
+\end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov chain Monte Carlo}
+
+\begin{center}
+\begin{tikzpicture}
+  \node [latent] (x1) {$x_1$};
+  \node[latent,right=of x1] (x2) {$x_2$};
+  \node[latent,right=of x2] (x3) {$x_3$};
+  \node[latent,right=of x3] (x4) {$x_4$};
+  \edge{x1} {x2};
+  \edge{x2} {x3};
+  \edge{x3} {x4};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+\item A Markov chain defines a sequence of marginal distributions; for
+  the BN above these are $P(x_{1})$, $P(x_{2})$, $P(x_{3})$ and
+  $P(x_{4})$.
+\item The goal of MCMC is to design a Markov chain so that this
+  sequence of marginal distributions converges on the distribution we
+  want. 
+\item Then we can just sample from the Markov chain and only keep the
+  sampled values of the `later' random variables.
+\item The sampled values we draw are \textbf{not} independent, but
+  this is a price we have to pay.
+\end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{How to get MCMC to work?}
+
+  \begin{itemize}
+  \item We have a clear goal:
+    \textbf{given} a target probability distribution $p(\mathbf{z})$,
+    \textbf{construct} a Markov chain
+    $\mathbf{z}^{(1)}, \dots, \mathbf{z}^{(i)} \dots$ such that
+    $\lim_{i \rightarrow \infty} p(\mathbf{z}^{(i)}) = p(\mathbf{z})$.
+  \item (For Bayesian machine learning the target distribution will be
+    $P(\theta|D=d)$, the posterior distribution of the model
+    parameters given the observed data.)
+  \item One solution to this is the \emph{Metropolis-Hastings}
+    algorithm.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The Metropolis-Hastings (MH) algorithm}
+
+  \begin{itemize}
+%  \item Let $p(\mathbf{z})$ be the \emph{target distribution}.
+  \item We define a single transition probability distribution for a
+    homogeneous Markov chain.
+  \item Let the current state be $\mathbf{z}^{(\tau)}$. When using the
+    MH algorithm sampling the
+    next state happens in two stages:
+    \begin{enumerate}
+    \item We generate a value $\mathbf{z}^{*}$ by sampling from a
+      \emph{proposal distribution}
+      $q(\mathbf{z}|\mathbf{z}^{(\tau)})$.
+    \item We then accept $\mathbf{z}^{*}$ as the new state with a certain
+      \emph{acceptance probability}.
+    If we don't accept $\mathbf{z}^{*}$ then we `stay
+      where we are', so that $\mathbf{z}^{(\tau)}$ is both the old
+      and new state.
+    \end{enumerate}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The Metropolis-Hastings acceptance probability}
+
+  Let $p(\mathbf{z})$ be the \emph{target distribution}.  The
+  acceptance probability is:
+  \cite[p. 541]{bishop06:_patter_recog_machin_learn}.
+
+  \begin{equation}
+    \label{eq:acceptance}
+    A(\mathbf{z}^{*},\mathbf{z}^{(\tau)}) =
+    \min \left(
+      1, \frac{p(\mathbf{z}^{*})q(\mathbf{z}^{(\tau)}|\mathbf{z}^{*})}
+      {p(\mathbf{z}^{(\tau)})q(\mathbf{z}^{*}|\mathbf{z}^{(\tau)})} \right)
+  \end{equation}
+
+  \begin{itemize}
+  \item   If $p(\mathbf{z}) = \tilde{p}(\mathbf{z})/Z$ then we have
+  $p(\mathbf{z}^{*})/p(\mathbf{z}^{(\tau)}) =
+    \tilde{p}(\mathbf{z}^{*})/\tilde{p}(\mathbf{z}^{(\tau)})$, so we
+    only need $p$ up to normalisation. This is a big win!
+  \item If the proposal distribution is symmetric then the `$q$' terms
+    cancel out: a special case known as the \emph{Metropolis
+      algorithm}.
+  \item Note that for the Metropolis algorithm if
+    $p(\mathbf{z}^{*}) \geq p(\mathbf{z}^{(\tau)})$ then we always
+    accept and `move' to $\mathbf{z}^{*}$.
+  \end{itemize}
+
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Does Metropolis-Hastings (always) work?}.
+
+  \begin{itemize}
+  \item It can be shown
+    \cite[p. 541]{bishop06:_patter_recog_machin_learn} that the target
+    distribution is an \emph{invariant distribution of the Markov
+      chain}: if the sequence of distributions $p(\mathbf{z}^{(i)})$
+    reaches the target distribution then it stays there.
+  \item Also, typically the Markov chain does converge to the target
+    distribution.
+  \item The \emph{rate} at which we converge to the target
+    distribution is greatly influenced by the choice of proposal distribution.
+  \end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{MCMC in practice}
+
+  \begin{itemize}
+  \item Straightforward Metropolis-Hastings is not the state-of-the-art
+    in MCMC.
+  \item \emph{Probabilistic programming} systems like PyMC by default
+    use more sophisticated MCMC algorithms (to avoid getting stuck).
+  \item From
+    \href{https://www.pymc.io/projects/docs/en/latest/learn/core_notebooks/pymc_overview.html}{the
+      PyMC intro overview}: ``Probabilistic programming (PP) allows
+    flexible specification of Bayesian statistical models in
+    code. PyMC is a PP framework with an intuitive and readable, yet
+    powerful, syntax that is close to the natural syntax statisticians
+    use to describe models. It features next-generation Markov chain
+    Monte Carlo (MCMC) sampling algorithms such as the No-U-Turn
+    Sampler''
+  \item When using MCMC we (1) throw away early samples (`burn-in')
+    and (2) `run independent chains' to check for convergence.
+  \item PyMC uses $\hat{R}$ (\texttt{r\_hat}) to check for
+    convergence; this value should be close to 1.
+  \end{itemize}
+
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Let's do some Bayesian machine learning with PyMC!}
+
+  \begin{itemize}
+  \item I've found the easiest way to get the introductory Jupyter notebooks
+    mentioned in the PyMC website is to clone the PyMC github repo.
+  \item You can then find them in \texttt{pymc/docs/source/learn/core\_notebooks}
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\bibliographystyle{alpha}
+\bibliography{../ml}
+
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+
+  \begin{itemize}
+  \item Conceptually the Bayesian approach is easy: the goal is to
+    compute the posterior distribution $P(\theta|D=d)$ where $\theta$
+    is the parameter vector and $d$ is the observed value of the data.
+  \item We choose a prior $P(\theta)$ and assume a particular
+    likelihood $P(D|\theta)$ and then Bayes theorem gives us
+    $P(\theta|D=d) \propto P(\theta)P(D=d|\theta)$.
+  \item If we choose a \emph{conjugate prior} for $P(\theta)$, then
+    representing and computing $P(\theta|D=d)$ is easy.
+  \item You have seen this with Rui in the context of (sequential)
+    Bayesian linear regression.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Problems for the Bayesian approach}
+
+  \begin{itemize}
+  \item ``For most probabilistic models of practical interest, exact
+    inference is intractable, and so we have to resort to some form of
+    approximation.'' \cite[p. 523]{bishop06:_patter_recog_machin_learn}.
+  \item We want to be able to just construct whatever joint
+    distribution $P(\theta,D)$ we think best models the
+    data-generating process and then compute $P(\theta|D=d)$.
+  \item However, with this flexibility there is a price: we may not
+    even be able to represent $P(\theta|D=d)$ easily, let alone
+    compute it.\pause
+  \item The solution is to give up on getting $P(\theta|D=d)$ exactly
+    and instead draw samples (of $\theta$) from $P(\theta|D=d)$ which
+    will allow us to approximately compute any posterior quantities,
+    e.g.\ the mean of $P(\theta|D=d)$.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Univariate sampling}
+
+  \begin{itemize}
+  \item We will assume throughout that we have some mechanism for
+    sampling from any \emph{univariate} distribution.
+  \item There are functions for sampling from a bunch of different
+    distributions in Python's
+    \href{https://docs.python.org/3/library/random.html}{random
+      module}. Also, to sample from a Gaussian you can use
+    \texttt{numpy.random.normal}.
+  \item If a multivariate distribution is described by a Bayesian
+    network then we can use \emph{ancestral sampling} to sample a
+    joint instantiation of the variables.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Ancestral sampling}
+
+  \[
+p(A,B,C,D,E)=p(A)p(B)p(C|A,B)p(D|C)p(E|B,C)
+\]
+
+  
+   \begin{tikzpicture}%[dgraph]
+ \node[latent] (x1) at (0,2.1) {$A$};
+ \node[latent] (x2) at (2,2.1) {$B$};
+ \node[latent] (x3) at (1,1) {$C$};
+ \node[latent] (x4) at (-0.2,0.1) {$D$};
+ \node[latent] (x5) at (2.5,-0.1) {$E$};
+ \edge{x1}  {x3};
+ \edge{x2} {x5};
+ \edge{x2} {x3};
+ \edge{x3} {x4};
+ \edge{x3}  {x5};
+ \end{tikzpicture}
+
+ \begin{itemize}
+ \item Just ensure that we sample values for all parents of a node
+   before we sample a value for that node (this is always possible due
+   to acyclicity).
+ \item So to sample from $p(A,B,C,D,E)$ we first sample values for $A$
+   and $B$, suppose we get the values $A=0,B=1$. We then sample a
+   value for $C$ from the conditional distribution $P(C|A=0,B=1)$, and
+   so on. \cite[\S8.1.2]{bishop06:_patter_recog_machin_learn}.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Sampling from marginal and conditional distributions}
+
+  \[
+    p(A,B,C,D,E)=p(A)p(B)p(C|A,B)p(D|C)p(E|B,C)
+  \]
+  
+  
+  \begin{itemize}
+  \item We can approximate any marginal distribution (say, $P(B,E)$)
+    by sampling full joint instantiations (by e.g.\ ancestral
+    sampling) and then only keeping the values of the variables in
+    the marginal.
+  \item We can use \emph{rejection sampling} to sample from
+    conditional distributions.
+  \item For example, to sample from $P(B,D|E=1)$ we sample from the
+    marginal distribution $P(B,D,E)$ and throw away those samples
+    where $E\neq 1$.
+  \item Rejection sampling is typically inefficient.
+  \end{itemize}
+   
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Approximating expectations}
+
+  \begin{itemize}
+  \item Often we want to compute expected values with respect to some
+    posterior distribution \cite[p. 524]{bishop06:_patter_recog_machin_learn}.
+  \end{itemize}
+
+  \begin{equation}
+    \label{eq:exp}
+    E[f] = \int f(\mathbf{z})p(\mathbf{z}) d\mathbf{z}
+  \end{equation}
+
+  \begin{itemize}
+  \item   If we draw independent samples $\mathbf{z}^{(l)}$, $l = 1, \dots, L$
+  from $p(\mathbf{z})$ then we can approximate $E[f]$ as follows:
+  \end{itemize}
+
+  \begin{equation}
+    \label{eq:approxexp}
+    \hat{f} = \frac{1}{L}\sum_{l=1}^{L}f(\mathbf{z}^{(l)})
+  \end{equation}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov chain Monte Carlo}
+
+  \begin{itemize}
+  \item If we can sample from a distribution then we have a simple way to
+    compute approximate values. But what if we cannot? \pause
+  \item If we can sample from \emph{a sequence of distributions} which
+    eventually reaches (or gets very close to) the desired
+    distribution, then we can adopt the following strategy:
+    \begin{enumerate}
+    \item Draw a sample from each distribution in this sequence.
+    \item Only keep the samples once we get `close enough' to the
+      desired distribution.
+    \end{enumerate}
+  \item This is the approach of Markov chain Monte Carlo (MCMC).
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov chains}
+
+  
+  ``A first-order Markov chain is defined to be a series of random
+  variables $\mathbf{z}^{(1)}, \dots, \mathbf{z}^{(M)}$ such that the
+  following conditional independence property holds for
+  $m \in \{1, \dots, M-1\}$''
+  \cite[p. 539]{bishop06:_patter_recog_machin_learn}.
+\begin{equation}
+p(\mathbf{z}^{(m+1)} |\mathbf{z}^{(1)} , . . . , \mathbf{z}^{(m)} ) = p(\mathbf{z}^{(m+1)} |\mathbf{z}^{(m)} )  
+\end{equation}
+
+\begin{itemize}
+\item $\mathbf{z}^{(m)}$ often represents (or can be imagined to
+  represent) the $m$th state of some dynamic system so that
+  $p(\mathbf{z}^{(m+1)} |\mathbf{z}^{(m)} )$ is a \emph{state
+    transition probability}.
+\item Here's the Bayesian network representation of a Markov chain where $M=4$.
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}
+  \node [latent] (x1) {$x_1$};
+  \node[latent,right=of x1] (x2) {$x_2$};
+  \node[latent,right=of x2] (x3) {$x_3$};
+  \node[latent,right=of x3] (x4) {$x_4$};
+  \edge{x1} {x2};
+  \edge{x2} {x3};
+  \edge{x3} {x4};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+\item Sampling from a Markov chain is easy: it's just a special case
+  of ancestral sampling.
+\end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov chain Monte Carlo}
+
+\begin{center}
+\begin{tikzpicture}
+  \node [latent] (x1) {$x_1$};
+  \node[latent,right=of x1] (x2) {$x_2$};
+  \node[latent,right=of x2] (x3) {$x_3$};
+  \node[latent,right=of x3] (x4) {$x_4$};
+  \edge{x1} {x2};
+  \edge{x2} {x3};
+  \edge{x3} {x4};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+\item A Markov chain defines a sequence of marginal distributions; for
+  the BN above these are $P(x_{1})$, $P(x_{2})$, $P(x_{3})$ and
+  $P(x_{4})$.
+\item The goal of MCMC is to design a Markov chain so that this
+  sequence of marginal distributions converges on the distribution we
+  want. 
+\item Then we can just sample from the Markov chain and only keep the
+  sampled values of the `later' random variables.
+\item The sampled values we draw are \textbf{not} independent, but
+  this is a price we have to pay.
+\end{itemize}
+
+\end{titledslide}
+
+
+\bibliographystyle{alpha}
+\bibliography{../ml}
+
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
