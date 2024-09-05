@@ -86,50 +86,54 @@ y_i = a_0 + a_1 x_i
 \begin{frame}[fragile]
   
 \frametitle{Revisiting linear regression -- fitting}
+
 \begin{itemize}
-\item Find $a$ and $b$ which minimises 
+\item Although we are currently assuming the model is linear, the data
+  will not typically be consistent with such an assumption. So \dots
+\item Find $\theta=(a_{0},a_{1})$ which minimises 
 \begin{equation}
-R(a,b) = \sum_{i=1}^N {(y_i - (a + bx_i))^2}
-\nonumber
+R(a_{0},a_{1}) = \sum_{i=1}^N {(y_i - (a_{0} + a_{1}x_i))^2}
 \end{equation}
 \item This is the \textcolor{blue}{sum of squared residuals}.
-\item A method which gives a closed form solution is to minimise the sum of squared vertical offsets of the points from the line, \textbf{\textcolor{blue}{Method of Least-Squares}}
+\item Using matrix notation we have:
 \end{itemize}
-\vspace{6pt}
+
+\[
+  \frac{\partial R}{\partial \theta} = -2\mathbf{X}^{T}(\mathbf{y}-\mathbf{X}\theta)
+\]
+
+\begin{itemize}
+\item Here $X_{i,j}$ is the value of the $j$th feature in the $i$th
+  datapoint (where we add a fake feature which is always 1 to handle
+  the intercept), and $y_i$ is the value of the \emph{response} in the
+  $i$th datapoint.
+\item Setting $\frac{\partial R}{\partial \theta}$ to 0 and
+  re-arranging we get:
+\end{itemize}
+
+\[
+  \hat{\theta} = (\mathbf{X}^T \mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}
+\]
+
 
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-
-  \frametitle{Least Squares Solution - \textcolor{blue}{matrix form}}
-  \begin{itemize}
-  \item To find a solution to the parameters $\theta = \{a_0, a_1\}$
-    solve least squares problem which \textcolor{blue}{in matrix form},
-    means to find \textcolor{blue}{$\textbf{a}_{LS}$}
-  \end{itemize}
   
-  \begin{align}
-    \uncover<2->{& \textcolor{blue}{\textbf{a}_{LS}} = (\textbf{X}^T \textbf{X})^{-1} \  \textbf{X}^T \  \textbf{y}}
-  \end{align}
+  \frametitle{Linear regression for nonlinear models}
+  
+  \begin{itemize}
+  \item For a polynomial of degree $p+1$ we use \begin{tiny}(note:
+      $p>1$ gives nonlinear regression)\end{tiny}
+  \end{itemize}
 
-\vspace{4pt}
-\uncover<3->{\begin{itemize}
-  \item Here $X_{i,j}$ is the value of the $j$th feature in the $i$th
-    datapoint (where we add a fake feature which is always 1 to handle
-    the intercept), and $y_i$ is the value of the \emph{response} in the
-    $i$th datapoint.
-  \item Matrix formulation also allows least squares method to be extended to \textbf{\textcolor{blue}{polynomial fitting}}
-  \item For a polynomial of degree $p+1$ we use \begin{tiny}(note: $p>1$ gives nonlinear regression)\end{tiny}
-    \begin{equation}
-      y_i = a_0 + a_1 x_i + a_2 x_i^2 + \cdots + a_{p} \ x_{i}^{p} \nonumber
-    \end{equation}
-  \end{itemize}}
+  \begin{equation}
+    y_i = a_0 + a_1 x_i + a_2 x_i^2 + \cdots + a_{p} \ x_{i}^{p} 
+  \end{equation}
+  
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 \begin{frame}[fragile]
 \frametitle{Least Squares Solution}
 \begin{example}
@@ -147,7 +151,7 @@ y &0 &1 &3 &9
 \hspace{6pt} \uncover<4->{$\textbf{X}^T \textbf{X} = \begin{bmatrix} 1 &1 &1 &1\\ -1 &0 &1 &2 \end{bmatrix} \begin{bmatrix} 1 &-1\\ 1&0\\ 1 &1\\ 1 &2 \end{bmatrix} = \begin{bmatrix} 4 &2\\ 2 &6\end{bmatrix}$}\\
 \vspace{6pt}
 
-\uncover<5->{$\textbf{a}_{LS} = (\textbf{X}^T \textbf{X})^{-1} \textbf{X}^T \textbf{y}$} \uncover<6->{$= \frac{1}{20} \begin{bmatrix} 6 &-2\\ -2 &4 \end{bmatrix}$} \uncover<7->{$\begin{bmatrix} 1 &1 &1 &1\\ -1 &0 &1 &2 \end{bmatrix}$} \uncover<8->{$\begin{bmatrix} 0\\ 1\\ 3\\ 9 \end{bmatrix}$} \uncover<9->{$= \begin{bmatrix} 1.8\\ 2.9 \end{bmatrix}$}
+\uncover<5->{$\hat{\theta} = (\textbf{X}^T \textbf{X})^{-1} \textbf{X}^T \textbf{y}$} \uncover<6->{$= \frac{1}{20} \begin{bmatrix} 6 &-2\\ -2 &4 \end{bmatrix}$} \uncover<7->{$\begin{bmatrix} 1 &1 &1 &1\\ -1 &0 &1 &2 \end{bmatrix}$} \uncover<8->{$\begin{bmatrix} 0\\ 1\\ 3\\ 9 \end{bmatrix}$} \uncover<9->{$= \begin{bmatrix} 1.8\\ 2.9 \end{bmatrix}$}
 
 \uncover<10->{$y = 1.8 + 2.9 x$}
 \end{frame}
@@ -340,9 +344,16 @@ See: \begin{small}[Chapter 5, Bishop]\end{small}
 	\end{itemize}\vspace{5pt}
 \uncover<2->{\item This looks like linear regression! Except the next step...}
 \uncover<3->{\item For $K=2$: An input vector $x$ is assigned to class $C_1$ if $y(x) \geq 0$ and to class $C_2$ otherwise.}
-\uncover<4->{\item Optimisation: least-squares (as for regression) \footnote{See Bishop p184 and p190.}, where we want to minimise the cost or error function:
+\uncover<4->{\item A direct application of least-squares to choose
+  $w_0$ and $\mathbf{w}$ does not give great results. See Bishop \S
+  4.1.3}
+\uncover<5->{\item Instead we can assume the data from each class has
+  a Gaussian distribution whose mean is class-specific (but where the
+  covariance matrix for each class is the same), use MLE to find parameters
+  for each of these Gaussians and finally use Bayes theorem to assign
+  classes. See
+  \href{https://scikit-learn.org/stable/modules/lda_qda.html}{scikit-learn explanation}.}
 \end{itemize}
-$\boxed{E = \frac{1}{2}\sum^N_{n=1} (\bm{w}^T\bm{x}_n + w_0 - t_n)^2}$ \small where $t_n$ are the targets/labels (e.g. $t_1$ = $C_1$).}
 \end{frame}
 
 
@@ -436,7 +447,7 @@ More details on calculating the derivative:
 	\item	From here $-ln\:p(\bm{t}|\bm{x},\bm{w}) = - \mathlarger{\sum_{n=1}^N}\{t_n ln\:y_n + (1-t_n)ln(1-y_n)\}$
 \uncover<2->{	\item We get $\mathlarger{\sum_{n=1}^N}\{ - \frac{t_n}{y_n} + \frac{(1-t_n)}{1-y_n}\} \{y_n(1-y_n)\}x_n$ \footnote{We used the chain rule and $d\: ln(x) = 1/x$. We also used the derivative of the sigmoid $d y_n = y(1-y_n)$.}}
 \uncover<3->{	\item The above simplifies to $\mathlarger{\sum_{n=1}^N}\{ - t_n (1-y_n) + (1-t_n)y_n\}x_n$}
-\uncover<4->{	\item And in turn to $\mathlarger{\sum_{n=1}^N}\{ y_n - t_n \} x_n$ \footnote{You can find the full derivation \href{https://uob-coms30035.github.io/Material/CrossEntropy.html}{here}.}}
+\uncover<4->{	\item And in turn to $\mathlarger{\sum_{n=1}^N}\{ y_n - t_n \} x_n$ \footnote{You can find the full derivation \href{https://uob-coms30035.github.io/lectures/lect04/CrossEntropy.html}{here}.}}
 \end{enumerate}
 
 \end{frame}
