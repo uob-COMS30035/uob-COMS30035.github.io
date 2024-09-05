@@ -1,0 +1,187 @@
+\documentclass[10pt]{beamer}
+
+\newcommand{\lectnum}{L14}
+\newcommand{\lecttitle}{Sequential Data (LDS)}
+
+\input{../preamble.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Acknowledgement}
+
+  \begin{itemize}
+  \item These slides are adapted from ones originally created by Edwin Simpson. 
+  \end{itemize}
+  
+\end{titledslide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[fragile]
+\frametitle{Agenda}   % expectation: 33 slides + title and agenda, 11 slides per chunk
+\begin{itemize}
+\item  \textcolor{gray}{Markov Models}
+\item \textcolor{gray}{Hidden Markov Models}
+\item \textcolor{gray}{EM for HMMs}
+\item Linear Dynamical Systems
+%\item \textcolor{gray}{Bayesian Timeseries Modelling with Gaussian Processes}  
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{From HMM to LDS}
+\begin{itemize}
+\item HMM assumes discrete latent states.
+\item Linear dynamical systems (LDS) assume states have continuous values.
+\item Both have the same graphical model:
+\end{itemize}
+\begin{tikzpicture}
+\node[draw=none]   (0) at (-1,-2) {};
+\node[draw=none]   (1) at (0,-2) {$z_1$};
+\draw[style={, ->, >=stealth'}] (0) edge node [right] {} (1);
+\draw (0,-2)circle (0.3cm);
+
+\node[draw=none] (2) at (1,-2) {$z_2$};
+\draw[style={, ->, >=stealth'}] (1) edge node [right] {} (2);
+\draw (1,-2) circle (0.3cm);
+
+\node[draw=none] (3) at (2,-2) {$z_3$};
+\draw[style={, ->, >=stealth'}](2) edge node [right] {} (3);
+\draw (2,-2) circle (0.3cm);
+
+\node[draw=none] (4) at (3,-2) {$z_4$};
+\draw[style={, ->, >=stealth'}](3) edge node [right] {} (4);
+\draw (3,-2) circle (0.3cm);
+
+\node[draw=none]   (9) at (4,-2) {};
+\draw[style={, ->, >=stealth'}](4) edge node [right] {} (9);
+
+\node[draw=none]   (5) at (0,-4) {$x_1$};
+\draw[style={, ->, >=stealth'}] (1) edge node [right] {} (5);
+\draw (0,-4)circle (0.3cm);
+
+\node[draw=none] (6) at (1,-4) {$x_2$};
+\draw[style={, ->, >=stealth'}] (2) edge node [right] {} (6);
+\draw (1,-4) circle (0.3cm);
+
+\node[draw=none] (7) at (2,-4) {$x_3$};
+\draw[style={, ->, >=stealth'}](3) edge node [right] {} (7);
+\draw (2,-4) circle (0.3cm);
+
+\node[draw=none] (8) at (3,-4) {$x_4$};
+\draw[style={, ->, >=stealth'}](4) edge node [right] {} (8);
+\draw (3,-4) circle (0.3cm);
+\end{tikzpicture}
+\begin{itemize}
+\item Inference has the same form as for an HMM, but when marginalising $\bs z_{n-1}$ and 
+$\bs z_{n+1}$, we take integrals instead of sums.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Motivations for LDS}
+\begin{itemize}
+\item Noisy sensors: inferring the true sequence of states from observations with Gaussian noise.
+\item Tracking: predicting the next movement and tracing the path from noisy observations.
+\end{itemize}
+% plot of an example
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Transition and Emission Distributions for LDS}
+\begin{itemize}
+\item $p(\bs z_1) = \mathcal{N}(\bs z_1 | \bs\mu_0, \bs V_0)$;
+\item $p(\bs z_n | \bs z_{n-1}) = \mathcal{N}(\bs z_n | \bs A \bs z_{n-1}, \bs\Gamma)$;
+\item $p(\bs x_n | \bs z_n) = \mathcal{N}(\bs x_n | \bs C \bs z_n, \bs\Sigma)$.
+%\item You can alternatively view the observations as adding Gaussian noise to the states.
+\item Note that the means of both distributions are \emph{linear} functions of the latent states.
+\item This choice of distributions ensures that the posteriors are also Gaussians with updated parameters
+\item This means that $\mathcal{O}(N)$ inference can still be performed using the sum-product algorithm.
+ 
+\end{itemize}
+% plot of an example
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Inference for an LDS}
+\begin{itemize}
+\item \emph{Kalman filter} = forward pass of sum-product for LDS.
+\item \emph{Kalman smoother} = backward pass of sum-product for LDS.
+\item No need for an analogue of Viterbi: the most likely sequence is given by the individually most probable states,
+so we get this from the Kalman equations.
+ 
+\end{itemize}
+% plot of an example
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Forward Inference (Kalman Filter) for an LDS}
+\begin{itemize}
+%\item Normalized "messages": 
+%$\hat{\alpha}(\bs z_n) = \mathcal{N}(\bs z_n | \bs \mu_n, \bs V_n) = p(\bs z_n | \bs x_1,...,\bs x_N)$
+\item \begin{align}
+{\alpha}(\bs z_n) & = \mathcal{N}(\bs x_n | \bs C \bs z_n, \bs \Sigma) \int \mathcal{N}(\bs z_n | 
+\bs A \bs z_{n-1}, \bs\Gamma) \alpha(\bs z_{n-1})  \mathrm{d} \bs z_{n-1} %= p(\bs z_n | \bs x_1,...,\bs x_N)
+%\nonumber \\
+%& = 
+\end{align}
+\item Normalising results in a Gaussian-distributed variable, whose parameters can be computed
+efficiently:
+$\hat{\alpha}(\bs z_n) = p(\bs z_n | \bs x_1, ..., \bs x_n) = \mathcal{N}(\bs z_n | \bs \mu_n, \bs V_n )$, where
+\begin{itemize}
+\item $\bs\mu_n$ is a function of $\bs\mu_{n-1}$,  $\bs x_n$, $\bs A$ and $\bs C$.
+\item  $\bs V_n$ is a function of $\bs V_{n-1}$,  $\bs\Sigma$, $\bs A$, $\bs\Gamma$ and $\bs C$.
+\end{itemize}
+\item We can view each forward step as predicting $\bs z_n$ based on the distribution over $\bs z_{n-1}$, then correcting
+that prediction given the new observation $\bs x_n$.
+% note that as we predict forward in time, we increase uncertainty in z_n to represent the possible state transitions
+\item For details, see Bishop (2006), Section 13.3.1
+\end{itemize}
+% plot of an example
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Backward Inference (Kalman Smoother) for an LDS}
+\begin{itemize}
+%\item Normalized "messages": 
+%$\hat{\alpha}(\bs z_n) = \mathcal{N}(\bs z_n | \bs \mu_n, \bs V_n) = p(\bs z_n | \bs x_1,...,\bs x_N)$
+\item Backward pass also follows that of the HMM: messages are passed from the final
+state to the start of the sequence.
+\item The backward messages contain information about future states that affects the posterior distribution at each step $n$.
+\item Since the transition and emission probabilities are all Gaussian, the posterior \emph{responsibilities} are also Gaussian, as are the \emph{state pair} expectations.
+\item For details, see Bishop (2006), Section 13.3.1
+\end{itemize}
+% plot of an example
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Learning the Parameters of LDS}
+\begin{itemize}
+%\item Normalized "messages": 
+%$\hat{\alpha}(\bs z_n) = \mathcal{N}(\bs z_n | \bs \mu_n, \bs V_n) = p(\bs z_n | \bs x_1,...,\bs x_N)$
+\item Kalman filter/smoother are analogous to the forward-backward algorithm for HMMs.
+\item Remember that this algorithm is used for the \emph{E step} of EM.
+\item The parameters are optimised in the \emph{M step} as before, by using the responsibilities
+$\mathbb{E}[\bs z_n]$, $\mathbb{E}[\bs z_n \bs z_n^T]$ and state pair expectations $\mathbb{E}[\bs z_n \bs z_{n-1}^T]$.
+\item For details, see Bishop (2006), Section 13.3.2
+\end{itemize}
+% plot of an example
+\end{frame}
+
+\begin{frame}
+\frametitle{Now do the quiz!}
+
+Please do the quiz for this lecture on Blackboard.
+\end{frame}
+
+
+\end{document}
