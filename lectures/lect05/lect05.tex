@@ -16,17 +16,6 @@
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]
-
-  \frametitle{Textbooks}
-We will follow parts of the Chapter 4 and 5 of the Bishop book:
-\begin{itemize}
-	\item Bishop, C. M., Pattern recognition and machine learning (2006). Available for free \href{https://www.microsoft.com/en-us/research/people/cmbishop/}{\underline{here}.}	\vspace{10pt}
-\vspace{10pt}
-\end{itemize}
-
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]
   
   \frametitle{Agenda}
   \begin{itemize}
@@ -138,7 +127,11 @@ From a single layer perceptron:\\
 \begin{frame}[fragile]
 \frametitle{Neural networks}
 
-To a Multiple Layer Perceptron (MLP) \footnote{Although, we call it perceptron, it typically uses logistic sigmoid activation functions (continous nonlinearities), instead of step-wise discontinous nonlinearities.}:\vspace{5pt}\\
+To a Multiple Layer Perceptron (MLP) \footnote{Although, we call it
+  perceptron, it typically uses logistic sigmoid activation functions
+  (continous nonlinearities), instead of step-wise discontinous
+  nonlinearities. NB the first and second weight vectors will be
+  different, despite both being denoted by $w$ here.}:\vspace{5pt}\\
 
 	\centerline{\includegraphics[scale=0.5]{../figures/MLP.pdf}}
 
@@ -155,13 +148,15 @@ To a Multiple Layer Perceptron (MLP) \footnote{Although, we call it perceptron, 
 	\item They can be applied in any form of learning, but we will focus on \underline{supervised learning} and classification in particular\\	
 \uncover<2->{	\item MLP recipe \footnote{Here we focus on simple feedforward nnets but the recipe is the same for any neural network.}:
 	\begin{itemize}	
-		\item Define architecture (e.g. how many hidden layers and neurons) \footnote{Note that this makes them parametric models.}
-		\item Define cost function (e.g. mean squared error)
+		\item Define architecture (i.e.\ how many hidden layers and neurons) \footnote{Note that this makes them parametric models.}
+		\item Define cost function (e.g.\ mean squared error)
 		\item Optimise network using backprop:
 			\begin{enumerate}	
 				\item Forward pass -- calculate activations; generate $y_k$
 				\item Calculate error/cost function	
-				\item Backward pass -- use backprop to update parameters
+				\item Backward pass -- use backprop to
+                                  compute error gradient
+                                \item Use gradient to improve parameters 
 			\end{enumerate}	
 	\end{itemize}}
 \end{itemize}
@@ -191,26 +186,179 @@ To a Multiple Layer Perceptron (MLP) \footnote{Although, we call it perceptron, 
 
 \centerline{\includegraphics[scale=0.5]{../figures/MLP_back.pdf}}
 
+\small This is a special case where the output layer has a single
+node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
 
 \end{frame}
 
 
-\begin{frame}[fragile]
-\frametitle{Neural networks -- backward pass}
+% \begin{frame}[fragile]
+% \frametitle{Neural networks -- backward pass}
 
-\small We now need to optimise our weights, and as before we use derivatives to find a solution. Effectively backpropagating the output error signal across the network -- backpropagation algorithm.
+% \small We now need to optimise our weights, and as before we use derivatives to find a solution. Effectively backpropagating the output error signal across the network -- backpropagation algorithm.
 
-\begin{enumerate}
-	\item \small Compute the error (or cost) function: e.g.: $E = \mathlarger{\frac{1}{2}\sum_{n=1}^N} (\bm{y(x_n,w}) - \bm{t_n})^2$
-\uncover<2->{	\item \small Use the \emph{chain rule} to compute the gradients w.r.t. $\bm{w}$, $\frac{dE}{d\bm{w}}$
-	\item \small For the output weights $w_{kj}$ we get:\\ $\mathlarger{\frac{\partial E}{\partial w_{kj}} = \frac{\partial E}{\partial y_{k}} \frac{\partial y_k}{\partial a_k} \frac{\partial a_k}{\partial w_{kj}} = \sigma'(y_n - t_n)z_j}$ \footnote{$\sigma '$ denotes the derivative of the sigmoid activation function.}}
-\uncover<3->{	\item \small Whereas for the input weights $w_{ji}$ we get: \\$\mathlarger{\frac{\partial E}{\partial w_{ji}} = \frac{\partial E}{\partial y_{k}} \frac{\partial y_k}{\partial a_k} \frac{\partial a_k}{\partial z_{j}}  \frac{\partial z_j}{\partial a_j} \frac{\partial a_j}{\partial w_{ji}} = \sigma' (y_n - t_n) w_{kj}^T \sigma' x_i}$ \footnote{Note that the updates for the bias terms $w_0$ do not depend on the activity of the previous layer $z_j$ and $x_i$.}}
-\end{enumerate}
+% \begin{enumerate}
+% 	\item \small Compute the error (or cost) function: e.g.: $E = \mathlarger{\frac{1}{2}\sum_{n=1}^N} (\bm{y(x_n,w}) - \bm{t_n})^2$
+% \uncover<2->{	\item \small Use the \emph{chain rule} to compute the gradients w.r.t. $\bm{w}$, $\frac{dE}{d\bm{w}}$
+% 	\item \small For the output weights $w_{kj}$ we get:\\ $\mathlarger{\frac{\partial E}{\partial w_{kj}} = \frac{\partial E}{\partial y_{k}} \frac{\partial y_k}{\partial a_k} \frac{\partial a_k}{\partial w_{kj}} = \sigma'(y_n - t_n)z_j}$ \footnote{$\sigma '$ denotes the derivative of the sigmoid activation function.}}
+% \uncover<3->{	\item \small Whereas for the input weights $w_{ji}$ we get: \\$\mathlarger{\frac{\partial E}{\partial w_{ji}} = \frac{\partial E}{\partial y_{k}} \frac{\partial y_k}{\partial a_k} \frac{\partial a_k}{\partial z_{j}}  \frac{\partial z_j}{\partial a_j} \frac{\partial a_j}{\partial w_{ji}} = \sigma' (y_n - t_n) w_{kj}^T \sigma' x_i}$ \footnote{Note that the updates for the bias terms $w_0$ do not depend on the activity of the previous layer $z_j$ and $x_i$.}}
+% \end{enumerate}
 
-\end{frame}
+% \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Total error as a sum of datapoint errors}
 
+  \begin{itemize}
+  \item Typically the error for an entire dataset breaks down into a
+    sum of errors for each individual datapoint:
+  \end{itemize}
+  \[
+    E(\mathbf{w}) = \sum_{n=1}^{N}E_{n}(\mathbf{w})
+  \]
+  \begin{itemize}
+  \item This means that the error gradient for the entire dataset with
+    respect to some weight $w_{ji}$ will just be the sum of error
+    gradients for each datapoint: 
+  \end{itemize}
+  \[
+    \frac{\partial E}{\partial w_{ji}} = \sum_{n=1}^{N}\frac{\partial E_{n}}{\partial w_{ji}}
+  \]
+  \begin{itemize}
+  \item So we focus attention on computing the $\frac{\partial
+      E_{n}}{\partial w_{ji}}$ values.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Computing partial derivatives 1}
 
+  \begin{itemize}
+  \item Although all values in the network depend on the datapoint $n$
+    we're focusing on, we will (like Bishop) omit the subscript $n$ from network
+    values to reduce clutter.
+  \item Consider an arbitrary unit $j$ (aka `node') in an neural
+    network.
+  \item We will associate the \emph{bias} for a unit with a dummy
+    input fixed to 1.
+  \item It computes a value $z_j$ by first computing $a_j$, a weighted sum of its
+    inputs (from the prevous layer), and then sending $a_j$ to some nonlinear
+    \emph{activation function} $h$:
+  \end{itemize}
+  \begin{align}
+    \label{eq:preact}
+    a_{j} & = \sum_{i}w_{ji}z_{i} \\
+    \label{eq:act}
+    z_{j} & = h(a_{j}) \\
+  \end{align}
+  \begin{itemize}
+  \item Since $E_n$ (the error for the $n$th datapoint) only depends on
+    weight $w_{ji}$ via $a_{j}$ we can use the chain rule to write:
+  \end{itemize}
+  \[
+    \frac{\partial E_{n}}{\partial w_{ji}} =     \frac{\partial E_{n}}{\partial a_{j}}\frac{\partial a_{j}}{\partial w_{ji}}
+  \]
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Computing partial derivatives 2}
 
+  \[
+    \frac{\partial E_{n}}{\partial w_{ji}} =     \frac{\partial E_{n}}{\partial a_{j}}\frac{\partial a_{j}}{\partial w_{ji}}
+  \]
+  \begin{itemize}
+  \item Since  $a_{j}  = \sum_{i}w_{ji}z_{i} $, $\frac{\partial a_{j}}{\partial w_{ji}}$ is easy to compute:
+  \end{itemize}
+  \[
+    \frac{\partial a_{j}}{\partial w_{ji}} = z_{i}
+  \]
+  As for $\frac{\partial E_{n}}{\partial a_{j}}$ let's just introduce
+  some notation for now: $\delta_{j} \equiv \frac{\partial E_{n}}{\partial a_{j}}$
+  \begin{equation}
+    \label{eq:dz}
+    \frac{\partial E_{n}}{\partial w_{ji}} = \delta_{j}z_{i}
+  \end{equation}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Computing partial derivatives 3}
+
+  \begin{itemize}
+  \item We compute the $\delta_{j} \equiv \frac{\partial
+      E_{n}}{\partial a_{j}}$ \emph{backwards} starting with the
+    output units.
+  \item For example, if the error (for a single datapoint) is $E_{n} =
+    \frac{1}{2}\sum_{k} (y_{k}-t_{k})^{2}$ then:
+  \end{itemize}
+  \begin{equation}
+    \label{eq:outgrad}
+    \delta_{k} = y_{k}-t_{k}    
+  \end{equation}
+  \begin{itemize}
+  \item For the hidden units we use the chain rule:
+  \end{itemize}
+  \[
+    \delta_{j} \equiv \frac{\partial E_{n}}{\partial a_{j}} = \sum_{k} \frac{\partial E_{n}}{\partial a_{k}}\frac{\partial a_{k}}{\partial a_{j}} 
+  \]
+  ``where the sum runs over all units $k$ to which unit $j$ sends
+  conections'' (Bishop). 
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Computing partial derivatives 4}
+
+  \[
+    \delta_{j} \equiv \frac{\partial E_{n}}{\partial a_{j}} = \sum_{k} \frac{\partial E_{n}}{\partial a_{k}}\frac{\partial a_{k}}{\partial a_{j}} 
+  \]
+  can be reformulated to give the \emph{backpropagation formula}:
+  \begin{equation}
+    \label{eq:backprop}
+    \delta_{j} = h'(a_{j})\sum_{k}w_{kj}\delta_{k}
+  \end{equation}
+    
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Error Backpropagation}
+
+  As given in Bishop:
+
+  \begin{enumerate}
+  \item Apply an input vector $\mathbf{x}_n$ to the network and
+    forward propagate through the network using (\ref{eq:preact}) and
+    (\ref{eq:act}) to find the activations of all the hidden and
+    output units.
+  \item Evaluate the $\delta_k$ for all the outputs units using
+    e.g.\ (\ref{eq:outgrad}).
+   \item Backpropagate the $\delta$'s using (\ref{eq:backprop}) to
+     obtain $\delta_j$ for each hidden unit in the network.
+  \item Use (\ref{eq:dz}) to evalute the required derivatives.
+  \end{enumerate}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Backpropagation in practice}
+
+  \begin{itemize}
+  \item It is crucial to organise the computation of all these partial
+    derivatives (i.e.\ the gradient $\partial E / \partial
+    \mathbf{w}$) efficiently.
+  \item The quantities required will be organised in tensors
+    (generalisation of matrices beyond 2 dimensions).
+  \item The \texttt{PyTorch} approach is called \emph{Autograd}.
+    There's lots of useful info/explanation of how it works on the
+    PyTorch site.
+  \end{itemize}
+
+  \begin{quotation}
+    PyTorch's Autograd feature is part of what make PyTorch flexible
+    and fast for building machine learning projects. It allows for the
+    rapid and easy computation of multiple partial derivatives (also
+    referred to as gradients) over a complex computation. This
+    operation is central to backpropagation-based neural network
+    learning. \href{https://pytorch.org/tutorials/beginner/introyt/autogradyt\_tutorial.html}{The
+    Fundamentals of Autograd}
+  \end{quotation}
+  
+\end{titledslide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
 \frametitle{Neural networks -- gradient descent \footnote{\tiny Its called descent because we are minimising the cost function, so descending on the function landscape, which can be quite hilly!}}
 
