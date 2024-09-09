@@ -1,7 +1,7 @@
 \documentclass[10pt]{beamer}
 
 \newcommand{\lectnum}{L05}
-\newcommand{\lecttitle}{Neural networks}
+\newcommand{\lecttitle}{Introduction to Neural Networks}
 
 \input{../preamble.tex}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -239,7 +239,7 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
     network.
   \item We will associate the \emph{bias} for a unit with a dummy
     input fixed to 1.
-  \item It computes a value $z_j$ by first computing $a_j$, a weighted sum of its
+  \item The unit computes a value $z_j$ by first computing $a_j$, a weighted sum of its
     inputs (from the prevous layer), and then sending $a_j$ to some nonlinear
     \emph{activation function} $h$:
   \end{itemize}
@@ -283,7 +283,7 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
 
   \begin{itemize}
   \item We compute the $\delta_{j} \equiv \frac{\partial
-      E_{n}}{\partial a_{j}}$ \emph{backwards} starting with the
+      E_{n}}{\partial a_{j}}$ \emph{backwards}, starting with the
     output units.
   \item For example, if the error (for a single datapoint) is $E_{n} =
     \frac{1}{2}\sum_{k} (y_{k}-t_{k})^{2}$ then:
@@ -330,6 +330,13 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
      obtain $\delta_j$ for each hidden unit in the network.
   \item Use (\ref{eq:dz}) to evalute the required derivatives.
   \end{enumerate}
+
+  \vspace*{1cm}
+  
+  \begin{itemize}
+  \item A key point is that computing a $\delta_j$ value helps us
+    compute \textbf{several} other $\delta_{j'}$ values.
+  \end{itemize}
   
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

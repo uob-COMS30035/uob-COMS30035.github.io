@@ -1,0 +1,193 @@
+\documentclass[10pt]{beamer}
+
+\newcommand{\lectnum}{L06}
+\newcommand{\lecttitle}{Training Neural Networks}
+
+\input{../preamble.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Problems and solutions when training neural networks}
+
+  \begin{itemize}
+  \item Once we have computed the gradient (at the current value of
+    the weights) \dots
+  \item \dots we can just send that gradient to an off-the-shelf
+    gradient based optimiser to reduce error (on the training set).
+  \item That can work fine, but not always.
+  \item In this lecture we look at various problems that may arise and
+    how they are dealt with.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Lecture content}
+
+  \begin{itemize}
+  \item This lecture is nothing more than a summary of (some of) the
+    material that can be found in Chapter~13 of Kevin Murphy's book
+    \cite{pml1Book}
+  \item We'll be switching from these slides to look at some of the
+    figures in that Chapter occasionally.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Vanishing and exploding gradients}
+
+  \begin{itemize}
+  \item When training deep models (ones with many layers) the gradient
+    can become very small or very large.
+  \item These are the \emph{vanishing gradient problem} and
+    \emph{exploding gradient problem} respectively.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Gradient clipping}
+
+  \begin{itemize}
+  \item \emph{Gradient clipping} can be used to cap the magnitude of
+    the gradient.
+  \item The original gradient $\mathbf{g}$ and the clipped gradient
+    $\mathbf{g}'$ are related as follows:
+  \end{itemize}
+
+  \[
+    \mathbf{g}' = \min \left(1, \frac{c}{||\mathbf{g}||}\right)\mathbf{g}
+  \]
+
+  \begin{itemize}
+  \item   Note that $\mathbf{g}'$ points in the same direction as $\mathbf{g}$.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Non-saturating activation functions for deep learning}
+
+  \begin{itemize}
+  \item The sigmoid activation function, for example, \emph{saturates}
+    at large negative or large positive values.
+  \item So its gradient there will be 0 preventing gradient descent
+    from reaching good weights.
+  \item A solution to this is simply to choose activation functions
+    that don't saturate.
+  \item Let's look at \cite[Fig~13.4]{pml1Book}.
+  \item ReLU (and variants) is a popular choice. 
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Using residual connections}
+
+  \begin{itemize}
+  \item In a \emph{residual network} each layer has the form of a
+    \emph{residual layer} defined as:
+  \end{itemize}
+
+  \[
+    {\cal F}'_{l}(\mathbf{x}) = {\cal F}_{l}(\mathbf{x}) + \mathbf{x} 
+  \]
+
+  \begin{itemize}
+  \item where ${\cal F}_{l}(\mathbf{x})$ is the standard (linear then
+    activation function) mapping.
+  \item The weights defining ${\cal F}_{l}(\mathbf{x})$ learn what
+    needs to be \textbf{added to} the input $\mathbf{x}$.
+  \item This provides a `short cut' for gradients to flow directly
+    from the output layer to any previous layer.
+  \item Let's look at \cite[Fig~13.15]{pml1Book}.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Parameter initialisation}
+
+  \begin{itemize}
+  \item Neural network training is non-convex, \dots
+  \item \dots i.e.\ the error `landscape' has many `valleys' and standard
+    gradient descent just end up at the bottom of whichever valley it
+    happens to start in.
+  \item So the choice of initial weights---\emph{parameter
+      initialisation}---matters.
+  \item We'll see the same issue arise when we later look at another
+    iterative algorithm: the EM algorithm.
+  \item I've decided not to examine the various methods used for
+    parameter initialisation in neural networks: it's enough that you
+    know that it matters.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Dealing with overfitting}
+
+  \begin{itemize}
+  \item Neural networks often have many parameters (ChatGPT has 175
+    billion!) so overfitting is an issue.
+  \item If we have a very large training dataset the problem is, at
+    least, greatly reduced. (GPT-3.5 used 570GB of data, about 300
+    billion words).
+  \item But we are not always swimming in a vast sea of data!
+  \item Let's look at some common ways of reducing overfitting in
+    neural networks.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Early stopping}
+
+  \begin{itemize}
+  \item Create a validation set.
+  \item Stop training when error on the validation set starts to
+    increase.
+  \item (Of course, using a validation set to prevent overfitting is
+    not unique to neural networks.)
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Weight decay}
+
+  \begin{itemize}
+  \item We can alter the loss function to penalise large weights.
+  \item Since the loss we are trying to minimise is now not just about
+    fitting the data, overfitting is reduced.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Dropout}
+
+  \begin{itemize}
+  \item \emph{Dropout} is where we randomly turn of all outgoing
+    connections from a unit with some given probability $p$.
+  \item Do this on a per-example basis : ``For each presentation of each training case, a new thinned network is sampled and
+trained.'' \cite{JMLR:v15:srivastava14a}
+  \item Let's look at \cite[Fig~13.18]{pml1Book}.
+  \item As Murphy puts it: `` \dots each unit must learn to perform well even
+    if some of the other units are missing at random. This prevents
+    the units from learning complex, but fragile, dependencies on each
+    other.''
+  \item Dropout can drastically reduce overfitting and is used a lot.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{We're missing out a lot, as ever}
+
+  \begin{itemize}
+  \item There is of course much more to learn about neural networks.
+  \item Most notably we have not looked into how the choice of
+    \emph{architecture} (neural network structure) is made \dots
+  \item \dots for example, convolutional NNs for image data.
+  \item Also there has recently been a lot of attention on
+    \emph{attention}: where the weights can depend on the input.
+  \item We'll finish off our look at neural nets by going through some
+    examples with PyTorch \dots
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{alpha}
+\bibliography{../ml.bib}
+
+
+\end{document}
