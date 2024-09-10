@@ -1,0 +1,138 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+
+\title{Cribsheet for Machine Learning (COMS30035)}
+\author{James Cussens}
+
+\newcommand{\yntk}{You need to know}
+
+\begin{document}
+
+\maketitle
+
+\section{Machine Learning Principles}
+\label{sec:ml}
+
+\yntk{} what the following terms mean:
+
+\begin{itemize}
+\item Unsupervised learning
+\item Supervised learning
+\item Regression
+\item Classification
+\item Underfitting
+\item Overfitting
+\item Model selection
+\item Training dataset
+\item Validation dataset
+\item Test dataset
+\item Cross-validation
+\item No free lunch theorem
+\item Model parameters
+\item Parametric model
+\item Nonparametric model
+\item Likelihood function
+\item Maximum likelihood estimation (MLE)
+\end{itemize}
+
+\section{Linear Regression}
+
+\yntk{} that the linear regression model is:
+\begin{equation}
+  \label{eq:lr}
+  p(y|\mathbf{x},\mathbf{w}) = \mathbf{w}^{\top}\mathbf{x} + \epsilon 
+\end{equation}
+where $\epsilon$ has a Gaussian distribution with mean 0:
+$\epsilon \sim {\cal N}(0,\sigma^{2})$. You need to know what a
+\emph{bias} parameter is and how in (\ref{eq:lr}) it was included in
+the parameter vector $\mathbf{w}$ by the addition of a `dummy'
+variable which always has the value 1.
+
+You need to understand that we can apply linear regression to a
+\emph{feature vector} $\phi(\mathbf{x})$ rather than the original data
+$\mathbf{x}$:
+\begin{equation}
+  \label{eq:lrfeats}
+  p(y|\phi(\mathbf{x}),\mathbf{w}) = \mathbf{w}^{\top}\phi(\mathbf{x}) + \epsilon\end{equation}
+
+\yntk:
+\begin{enumerate}
+\item what the least-squares problem for linear regression is
+\item that the solution to this problem has a closed-form (but you
+  don't need to memorise this closed-form)
+\item and that the least-squares solution is also the maximum
+  likelihood solution (you do not need to be able to prove this).
+\end{enumerate}
+
+\section{Linear Discriminant}
+
+\yntk{} that when there are two classes Linear Discriminant
+computes $y = \mathbf{w}^{\top}\mathbf{x}$ for input $x$ and assigns
+$x$ to class $C_1$ if $y\geq 0$ and class $C_2$ otherwise. Parameters
+are `learnt' by assuming that:  (1) data for each class have a Gaussian
+distribution, (2) these 2 Gaussian distributions have the same
+covariance matrix. Parameters can then be found by applying MLE.
+
+\section{Logistic Regression}
+\label{sec:logreg}
+
+\yntk{} that the \emph{logistic sigmoid function} (sometimes
+called just the \emph{logistic function}) is:
+\[
+  \sigma(a) = \frac{1}{1+\exp(-a)}
+\]
+\yntk{} that the logistic regression model for two classes
+is:
+\begin{equation}
+  \label{eq:logreg}
+  p(C_{1}|\mathbf{x}) = \sigma(\mathbf{w}^{\top}\mathbf{x}) \qquad
+  p(C_{2}|\mathbf{x}) = 1 - p(C_{1}|\mathbf{x})
+\end{equation}
+\yntk{} that the MLE parameters for logistic regression can be found by
+gradient descent.
+
+\section{Neural networks}
+\label{sec:nns}
+
+\yntk{} what the following terms mean:
+\begin{itemize}
+\item Weights
+\item Activation function
+\item Input layer
+\item Hidden layer
+\item Output layer
+\item Cost function / Loss function
+\item Forward pass
+\item Backward pass
+\item Backpropagation
+\item Vanishing gradient problem
+\item Exploding gradient problem
+\item Gradient clipping
+\item Non-saturating activation functions
+\item Residual layer / network
+\item Parameter initialisation
+\item Early stopping
+\item Weight decay
+\item Dropout
+\end{itemize}
+
+\yntk{} that a unit $j$ in a neural network computes a value $z_j$ by
+first computing $a_j$, a weighted sum of its inputs (from the prevous
+layer), and then sending $a_j$ to some nonlinear \emph{activation
+  function} $h$:
+\begin{align}
+  \label{eq:preact}
+  a_{j} & = \sum_{i}w_{ji}z_{i} \\
+  \label{eq:act}
+  z_{j} & = h(a_{j}) \\
+\end{align}
+
+\yntk{} the \emph{backpropagation formula}:
+\begin{equation}
+  \label{eq:backprop}
+  \delta_{j} = h'(a_{j})\sum_{k}w_{kj}\delta_{k}
+\end{equation}
+and be able to explain what each of the symbols in this formula represent.
+
+\end{document}

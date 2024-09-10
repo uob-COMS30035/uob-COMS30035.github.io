@@ -434,7 +434,11 @@ Follow MLE recipe:
 \item Start with random weight values 
 \item We want to adjust each weight $w$  to minimise negative log likelihood: move downhill to the minimum
 \item The derivative represents the slope: $\frac{d\:ln\:p(\bm{t}|\bm{x},\bm{w})}{d \bm{w}} = \mathlarger{\sum_{n=1}^N} (y_n - t_n)x_n$
-\item Increase or decrease $w$ by a small amount in the downward direction 
+\item Increase or decrease $w$ by a small amount in the downward
+  direction 
+\item Graph above illustrates gradient descent in general. In the
+  particular case of logistic regression the error function is
+  \emph{convex} which means it has a unique minimum.
 \end{itemize}
 \end{frame}
 
@@ -465,7 +469,21 @@ Using sklearn we fitted a logistic regression classifier to the data: \vspace{5p
 \end{example}
 \small As you can see the results are very similar to LD, but because of probabilistic formulation we have an explicit probability of belonging to one or the other class (not shown); \underline{this can be very useful in real-world applications} (e.g. self-driving cars or cancer detection).
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Optimisation algorithms for logistic regression}
 
+  \begin{itemize}
+  \item Although we have looked at simple gradient descent for
+    logistic regression,
+  \item the traditional optimisation algorithm (\emph{iterative
+      reweighted least squares}) also uses the Hessian - the matrix of
+    second partial derivatives.
+  \item For logistic regression, scikit-learn offers you a choice of
+    no fewer than 6 optimisation algorithms to choose from!
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \begin{frame}[fragile]
