@@ -71,7 +71,11 @@
   \item A solution to this is simply to choose activation functions
     that don't saturate.
   \item Let's look at \cite[Fig~13.4]{pml1Book}.
-  \item ReLU (and variants) is a popular choice. 
+  \item ReLU and its variants are popular choices. But not that plain
+    ReLU has zero gradient for negative values so we might end up with
+    the `dead ReLU' problem.
+  \item Note also that ReLU is not a differentiable function at 0, but we
+    can just impose a derivative value of 0 there.
   \end{itemize}
   
 \end{titledslide}
@@ -104,7 +108,7 @@
   \begin{itemize}
   \item Neural network training is non-convex, \dots
   \item \dots i.e.\ the error `landscape' has many `valleys' and standard
-    gradient descent just end up at the bottom of whichever valley it
+    gradient descent just ends up at the bottom of whichever valley it
     happens to start in.
   \item So the choice of initial weights---\emph{parameter
       initialisation}---matters.
@@ -157,8 +161,9 @@
 \begin{titledslide}{Dropout}
 
   \begin{itemize}
-  \item \emph{Dropout} is where we randomly turn of all outgoing
-    connections from a unit with some given probability $p$.
+  \item \emph{Dropout} is where, during training, we randomly turn of
+    all outgoing connections from a unit with some given probability
+    $p$.
   \item Do this on a per-example basis : ``For each presentation of each training case, a new thinned network is sampled and
 trained.'' \cite{JMLR:v15:srivastava14a}
   \item Let's look at \cite[Fig~13.18]{pml1Book}.
@@ -184,6 +189,27 @@ trained.'' \cite{JMLR:v15:srivastava14a}
     \emph{attention}: where the weights can depend on the input.
   \item We'll finish off our look at neural nets by going through some
     examples with PyTorch \dots
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Reading}
+
+  \begin{itemize}
+  \item Murphy The relevant sections of Chapter~13. 
+  \end{itemize}
+  
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Problems and quizzes}
+
+  \begin{itemize}
+  \item No problems
+  \item Quizzes:
+    \begin{itemize}
+    \item Week~2: Training Neural Networks
+    \end{itemize}
   \end{itemize}
   
 \end{titledslide}
