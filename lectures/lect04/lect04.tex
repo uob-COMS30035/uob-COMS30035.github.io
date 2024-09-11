@@ -387,16 +387,15 @@ Follow MLE recipe:
 
 \begin{frame}[fragile]
 \frametitle{MLE using Gradient Descent}
-\includegraphics[scale=0.5]{../figures/gradient_descent.png}
+\includegraphics[scale=0.25]{../figures/grad_desc.jpeg}
 \begin{itemize}
 \item Start with random weight values 
 \item We want to adjust each weight $w$  to minimise negative log likelihood: move downhill to the minimum
 \item The derivative represents the slope: $\frac{d\:ln\:p(\bm{t}|\bm{x},\bm{w})}{d \bm{w}} = \mathlarger{\sum_{n=1}^N} (y_n - t_n)x_n$
 \item Increase or decrease $w$ by a small amount in the downward
-  direction 
-\item Graph above illustrates gradient descent in general. In the
-  particular case of logistic regression the error function is
-  \emph{convex} which means it has a unique minimum.
+  direction
+\item In the particular case of logistic regression the error function
+  is \emph{convex} which means it has a unique minimum.
 \end{itemize}
 \end{frame}
 
@@ -470,14 +469,4 @@ Using sklearn we fitted a logistic regression classifier to the data: \vspace{5p
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
 \end{document}
-\begin{frame}[fragile]
-\frametitle{Quiz time!}
-\centerline{\includegraphics[scale=0.3]{../figures/BB.png}\vspace{10pt}}
-\begin{center}\begin{Large} Go to Blackboard unit page $\gg$ Quizzes $\gg$ Week 1,  Revisiting Regression \end{Large}\end{center}\vspace{10pt}
-\centerline{[Should take you less than 5 minutes]}
-\end{frame}
-
-

@@ -27,7 +27,6 @@
     \item Gradient descent
     \end{itemize}
   \end{itemize}
-  See: \begin{small}[Chapter 5, Bishop]\end{small}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%          
@@ -52,7 +51,7 @@
 \end{cases} $}
 \uncover<3->{
 \item Here the target $t = \{+1, -1\}$.
-\item And we aim to mimimise the following error $ - \mathlarger{\sum_{n=1}^N \bm{w}^T\phi_nt_n }$ \footnote{Intuitively we want to improve our chances of having $t_n = y_n = -1$ or $t_n = y_n = 1$, which will both decrease our error function.}}
+\item And we aim to minimise the following error $ - \mathlarger{\sum_{n=1}^N \bm{w}^T\phi_nt_n }$ \footnote{Intuitively we want to improve our chances of having $t_n = y_n = -1$ or $t_n = y_n = 1$, which will both decrease our error function.}}
 \end{itemize}
 
 \end{frame}
@@ -129,7 +128,7 @@ From a single layer perceptron:\\
 
 To a Multiple Layer Perceptron (MLP) \footnote{Although, we call it
   perceptron, it typically uses logistic sigmoid activation functions
-  (continous nonlinearities), instead of step-wise discontinous
+  (continuous nonlinearities), instead of step-wise discontinuous
   nonlinearities. NB the first and second weight vectors will be
   different, despite both being denoted by $w$ here.}:\vspace{5pt}\\
 
@@ -146,7 +145,7 @@ To a Multiple Layer Perceptron (MLP) \footnote{Although, we call it
 	\item Neural networks are at heart composite functions of linear-nonlinear functions. 
 	\item \textbf{Deep learning}\footnote{If you would like to learn more take our Applied Deep Learning unit in your 4th year.} refers to neural networks (or MLPs) with more than 1 hidden layer\\	
 	\item They can be applied in any form of learning, but we will focus on \underline{supervised learning} and classification in particular\\	
-\uncover<2->{	\item MLP recipe \footnote{Here we focus on simple feedforward nnets but the recipe is the same for any neural network.}:
+\uncover<2->{	\item MLP recipe \footnote{Here we focus on simple feedforward nets but the recipe is the same for any neural network.}:
 	\begin{itemize}	
 		\item Define architecture (i.e.\ how many hidden layers and neurons) \footnote{Note that this makes them parametric models.}
 		\item Define cost function (e.g.\ mean squared error)
@@ -240,7 +239,7 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
   \item We will associate the \emph{bias} for a unit with a dummy
     input fixed to 1.
   \item The unit computes a value $z_j$ by first computing $a_j$, a weighted sum of its
-    inputs (from the prevous layer), and then sending $a_j$ to some nonlinear
+    inputs (from the previous layer), and then sending $a_j$ to some nonlinear
     \emph{activation function} $h$:
   \end{itemize}
   \begin{align}
@@ -299,7 +298,7 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
     \delta_{j} \equiv \frac{\partial E_{n}}{\partial a_{j}} = \sum_{k} \frac{\partial E_{n}}{\partial a_{k}}\frac{\partial a_{k}}{\partial a_{j}} 
   \]
   ``where the sum runs over all units $k$ to which unit $j$ sends
-  conections'' (Bishop). 
+  connections'' (Bishop). 
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{titledslide}{Computing partial derivatives 4}
@@ -328,7 +327,7 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
     e.g.\ (\ref{eq:outgrad}).
    \item Backpropagate the $\delta$'s using (\ref{eq:backprop}) to
      obtain $\delta_j$ for each hidden unit in the network.
-  \item Use (\ref{eq:dz}) to evalute the required derivatives.
+  \item Use (\ref{eq:dz}) to evaluate the required derivatives.
   \end{enumerate}
 
   \vspace*{1cm}
@@ -371,7 +370,7 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
 
 \small In many ML methods is common to iteratively update the parameters by descending the gradient. \vspace{10pt}\\
 
-\centerline{\includegraphics[scale=0.25]{../figures/grad_desc.jpeg}\footnote{\tiny
+\centerline{\includegraphics[scale=0.25]{../figures/gradient_descent.png}\footnote{\tiny
     Figure from
     \url{https://mc.ai/an-introduction-to-gradient-descent-2/} (link
     no longer working)}}
@@ -421,6 +420,37 @@ Solutions: \emph{early stopping} (stop when test performance starts decreasing) 
 
 \centerline{\includegraphics[scale=0.25]{../figures/classifiers_comparison.png}}
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Reading}
+
+  \begin{itemize}
+  \item Bishop \S5.1 except \S5.1.1
+  \item Bishop \S5.2 except \S5.2.2
+  \item Bishop \S5.3 up to \S5.3.2
+  \item Murphy \S13.1-\S13.2
+  \item Murphy's description of backpropagation in \S13.3 is
+    interesting since it is closer to how it is actually implemented,
+    but more complex than Bishop's presentation.
+  \end{itemize}
+  
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Problems and quizzes}
+
+  \begin{itemize}
+  \item Bishop Exercise 4.12
+  \item Bishop Exercise 5.6 (Tip: Use the result you derived in
+    Exercise 4.12 to help you.) 
+  \item Quizzes:
+    \begin{itemize}
+    \item Week~2: Neural Networks
+    \end{itemize}
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
 
 \begin{frame}[fragile]
 \frametitle{Quiz and video time!}
