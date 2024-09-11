@@ -17,18 +17,6 @@
   
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]
-
-  \frametitle{Textbooks}
-  Chapter 3 of the Bishop book is directly relevant:
-  \begin{itemize}
-  \item Bishop, C. M., Pattern recognition and machine learning (2006). Available for free \href{https://www.microsoft.com/en-us/research/people/cmbishop/prml-book/}{here.}	\vspace{10pt}
-  \item \textbf{Note:} this first part is a revision of should be
-    covered in Data-driven Computer Science in your 2nd year.
-\end{itemize}
-
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[fragile]
 \frametitle{Agenda}
@@ -37,6 +25,8 @@
 		\item Nonlinear regression		
 		\item Probabilistic models
 		\item Maximum likelihood estimation
+                \item Discriminant functions
+		\item Logistic regression			
 \end{itemize}
 
 \end{frame}
@@ -280,38 +270,6 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
 \end{frame}
 
 
-\begin{frame}[fragile]
-\frametitle{Textbooks}
-We will follow parts of the Chapter 4 and 5 of the Bishop book:
-\begin{itemize}
-	\item Bishop, C. M., Pattern recognition and machine learning (2006). Available for free \href{https://www.microsoft.com/en-us/research/people/cmbishop/}{\underline{here}.}	\vspace{10pt}
-\vspace{10pt}
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Agenda}
-	\begin{itemize}
-		\item Discriminant functions
-		\item Logistic regression			
-		% \item Perceptron
-		% \item Neural networks (multi-layer perceptron)
-		% \begin{itemize}
-		% 	\item Architecture
-		% 	\item The backpropagation algorithm
-		% 	\item Gradient descent
-		%\end{itemize}
-%		\item Optimising nnets using backprop
-%		\item Highly flexible model $\rightarrow$ overfitting: early stopping/drop-out.
-%		\item Probabilistic variants [see Bishop]
-
-%		\item Model selection: training/testing, cross-validation
-%		\item Parametric vs non-parametric models
-%		\item Decision theory (and information theory?)			
-	\end{itemize}
-See: \begin{small}[Chapter 5, Bishop]\end{small}
-\end{frame}
-
 
 
 \begin{frame}[fragile]
@@ -484,8 +442,37 @@ Using sklearn we fitted a logistic regression classifier to the data: \vspace{5p
   
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Reading}
+
+  \begin{itemize}
+  \item Bishop \S3.1 up to end of \S3.1.1.
+  \item Bishop Chapter~4 up to end of \S4.1.1.
+  \item Bishop \S4.3.2 
+  \item Murphy \S4.2.1--\S4.2.2
+  \item Murphy \S10.1--\S10.2.3.1
+  \item Murphy \S11.1--\S11.2.2.1
+  \end{itemize}
+  
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Problems and quizzes}
+
+  \begin{itemize}
+  \item No problems.
+  \item Quizzes:
+    \begin{itemize}
+    \item Week~1: Regression
+    \item Week~1: Classification
+    \end{itemize}
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+
+\end{document}
 \begin{frame}[fragile]
 \frametitle{Quiz time!}
 \centerline{\includegraphics[scale=0.3]{../figures/BB.png}\vspace{10pt}}
@@ -493,4 +480,4 @@ Using sklearn we fitted a logistic regression classifier to the data: \vspace{5p
 \centerline{[Should take you less than 5 minutes]}
 \end{frame}
 
-\end{document}
+
