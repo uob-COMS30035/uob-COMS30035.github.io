@@ -152,6 +152,20 @@
 
   \begin{itemize}
   \item We can alter the loss function to penalise large weights.
+  \item \emph{Weight decay}, also known as \emph{$\ell_2$
+      regularisation}, adds a term $\lambda
+    \mathbf{w}^{\top}\mathbf{w}$ to the loss function, where
+    $\mathbf{w}$ is the weight vector and the user
+    chooses the value of $\lambda > 0$.
+  \item Murphy writes $\mathbf{w}^{\top}\mathbf{w}$ as
+    $||\mathbf{w}||_{2}^{2}$ which makes it explicit that we are
+    calculating (the square of) the 2-norm (aka Euclidean norm). See
+    Murphy \S7.1.3 for more on norms if you're interested.
+  \item In scikit-learn a parameter called \texttt{alpha} sets
+    $\lambda$ to $\mathtt{alpha}/N$, where $N$ is the size of the
+    training data. The default value of
+    \texttt{alpha} is 0.0001, so we get a little \emph{$\ell_2$
+      regularisation}.
   \item Since the loss we are trying to minimise is now not just about
     fitting the data, overfitting is reduced.
   \end{itemize}
