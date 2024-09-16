@@ -58,18 +58,25 @@
 
 
 \begin{frame}[fragile]
-\frametitle{Linear regression revisited}
-Consider a linear regression model:
+\frametitle{(Regularised) Linear regression revisited}
+Suppose we are doing (regularised) linear regression by minimising
+regularised sum of squared error:
 \begin{equation}
   \label{eq:lr}
-  y(\xvec) = \params^{T}\feat(\xvec)
+  J(\params) = \frac{1}{2}
+  \sum_{n=1}^{N}\left(\params^{\top}\feat(\xvec) - t_{n}\right)^{2} + \frac{\lambda}{2}\params^{\top}\params
 \end{equation}
 where
 \begin{enumerate}
 \item \params{} is the $M$-dimensional parameter vector to be learned
   from the data (which includes a component for the intercept)
 \item \xvec{} is some datapoint, and
-\item $\feat(\xvec)$ is the $M$-dimensional feature vector which \xvec{} gets mapped to by the \emph{basis functions} \cite[\S3.1]{bishop06:_patter_recog_machin_learn}.
+\item $\feat(\xvec)$ is the $M$-dimensional feature vector which
+  \xvec{} gets mapped to by the \emph{basis functions}
+  \cite[\S3.1]{bishop06:_patter_recog_machin_learn}.
+\item $\frac{\lambda}{2}\params^{\top}\params$ is the regularisation
+  term which pushes parameters which are not helping much to fit the
+  data towards zero.
 \end{enumerate}
 \end{frame}
 
@@ -79,7 +86,7 @@ where
 \item Let $N$ be the size of the data. Let $\designm$ be the
   \emph{design matrix} whose $n$th row is just the feature vector for
   the $n$th datapoint (so it is basically `the data'). It turns out that
-  we can reformulate in terms of an $N$-dimensional parameter vector
+  we can write the minimising value of $\params$ in terms of an $N$-dimensional parameter vector
   \dualparams{} as follows:
 \end{itemize}
 \begin{equation}
@@ -91,8 +98,17 @@ so that
   \label{eq:dual}
   y(\xvec) = \params^{T}\feat(\xvec) = \dualparams^{T}\designm\feat(\xvec)
 \end{equation}
+
+In this case, the \emph{dual parameters} $a_n$ are the
+($\lambda$-adjusted) \emph{residuals}:
+\begin{equation}
+  \label{eq:duala}
+  a_{n} = -\frac{1}{\lambda}\left( \params^{T}\feat(\xvecn) - t_{n}\right)
+\end{equation}
+
+
 \begin{itemize}
-\item This is known as a \emph{dual representation}.
+\item Using $\dualparams$ is known as a \emph{dual representation}.
 \item So we have replaced an $M$-dimensional parameter vector with an
   $N$-dimensional one and moreover, to make a prediction for a new
   datapoint we have to use the entire training set (i.e.\ \designm)
@@ -472,7 +488,7 @@ k(\xvec,\xvec') =  \exp(-\gamma \|\xvec-\xvec'\|^2)
 
   \begin{itemize}
   \item If we want a nice wide margin then we might have to allow training points to be inside the margin,
-  \item or even on the wrong side of the decicion boundary.
+  \item or even on the wrong side of the decision boundary.
   \item Figure from \cite[p.332]{bishop06:_patter_recog_machin_learn}.
   \item Note: In the figure below three of the purple circles are
     missing their cyan dots. This is corrected in the hard copy book. 
@@ -527,7 +543,7 @@ k(\xvec,\xvec') =  \exp(-\gamma \|\xvec-\xvec'\|^2)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{titledslide}{scikit learn's decision function}
 
-The red/blue areas in the plots on the last slide represente values of
+The red/blue areas in the plots on the last slide represent values of
 the \emph{decision function} which is defined
 \href{https://scikit-learn.org/stable/modules/svm.html\#svm-mathematical-formulation}{in
   the scikit learn documentation.}
@@ -591,6 +607,29 @@ the \emph{decision function} which is defined
   
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Reading}
+
+  \begin{itemize}
+  \item Bishop \S6.1.
+  \item Bishop \S7.1 (can skip \S7.1.2). 
+  \item Murphy \S17.3 up to \S17.3.8 (skip \S17.3.5 and \S17.3.6)
+  \end{itemize}
+  
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Problems and quizzes}
+
+  \begin{itemize}
+  \item No problems
+    \begin{itemize}
+    \item Week~3: Intro to Kernels
+    \item Week~3: SVMs
+    \item Week~3: SVMs in Practice
+    \end{itemize}
+  \end{itemize}
+  
+\end{titledslide}
 
 \bibliographystyle{alpha}
 \bibliography{../ml.bib}
