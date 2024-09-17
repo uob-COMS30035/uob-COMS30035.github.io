@@ -251,7 +251,7 @@ represented in the BN. I have shaded the $t_1$ and $t_n$ nodes to indicate that 
   The full Bayesian polynomial regression model contains:
     \begin{enumerate}
     \item The input data $\xvec = (x_{1}, \dots, x_{N})^{T}$
-    \item The observed ouputs $\mathbf{t} = (t_{1}, \dots, t_{N})^{T}$
+    \item The observed outputs $\mathbf{t} = (t_{1}, \dots, t_{N})^{T}$
     \item The parameter vector $\params$.
     \item A hyperparameter $\alpha$.
     \item The noise variance $\sigma^{2}$.
@@ -665,6 +665,29 @@ p(A,B,C,D,E)=p(A)p(B)p(C|A,B)p(D|C)p(E|B,C)
     P(\theta,y,\mu,\sigma^{2}) = P(\mu,\sigma^{2})\prod_{i=1}^{k}P(y_{i}|\theta_{i})P(\theta_{i}|\mu,\sigma^{2})
   \]
 \end{titledslide}
+\begin{titledslide}{Reading}
+
+  \begin{itemize}
+  \item Bishop \S6.1.
+  \item Bishop \S7.1 (can skip \S7.1.2). 
+  \item Murphy \S17.3 up to \S17.3.8 (skip \S17.3.5 and \S17.3.6)
+  \end{itemize}
+  
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Problems and quizzes}
+
+  \begin{itemize}
+  \item Do the problems on slide L09: 22/26
+    \begin{itemize}
+    \item Week~4: Intro to PGMs
+    \item Week~4: d-separation
+    \end{itemize}
+  \end{itemize}
+  
+\end{titledslide}
+
 \bibliographystyle{alpha}
 \bibliography{../ml}
 
