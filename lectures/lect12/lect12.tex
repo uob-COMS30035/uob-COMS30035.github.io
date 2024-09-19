@@ -30,8 +30,11 @@
   \begin{itemize}
   \item No closed form for the MLE
   \item (At least $K!$ solutions)	
-  \item So have to resort to an iterative algorithm where we are only guaranteed a local maximum.
-    \item The algorithm is called the \emph{Expectation-Maximization (EM) algorithm}.
+  \item So have to resort to an iterative algorithm.
+  \item ``It should be emphasized that there will generally be
+    multiple local maxima of the log likelihood function'' \cite[p. 438]{bishop06:_patter_recog_machin_learn}.
+  \item The iterative algorithm we use is called the
+    \emph{Expectation-Maximization (EM) algorithm}.
   
   \end{itemize}
   
@@ -156,6 +159,7 @@ The same equation in different notation is:
   \item An exercise for you: prove that this decomposition is correct
     (Exercise 9.24 in Bishop). Use the tip Bishop gives on p.451.
   \end{itemize}
+
   
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -284,47 +288,33 @@ The same equation in different notation is:
   
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Reading}
+
+  \begin{itemize}
+  \item Bishop \S9.2.2
+  \item Bishop \S9.4
+  \item Murphy \S8.7.2-\S8.7.3
+  \end{itemize}
+  
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Problems and quizzes}
+
+  \begin{itemize}
+  \item Bishop Exercise 9.8
+  \item Bishop Exercise 9.9
+  \item Bishop Exercise 9.24 (Use the tip Bishop gives on p. 451)
+  \item Quizzes:
+    \begin{itemize}
+    \item Week~5: The EM algorithm
+    \end{itemize}
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{alpha}
 \bibliography{../ml}
 
 
 \end{document}
-
-\begin{itemize}
-\item EM is used to (try to) maximise log-likelihood functions of the following form:
-\end{itemize}
-
-\end{titledslide} 
-
-\begin{titledslide}{The General EM algorithm}
-
-  \textbf{E step} Evaluate $p(\Zvec|\Xvec,\thetavec^{\mbox{old}})$ so we have:
-  \[
-     Q(\thetavec|\thetavec^{\mbox{old}}) = \sum_{\zvec} p(\Zvec|\Xvec, \thetavec^{\mbox{old}}) \ln p(\Xvec, \Zvec | \thetavec)
-  \]
-
-\vskip1cm
-
-\textbf{M step} 
-\[
-\thetavec^{\mbox{new}}
-= 
-\arg\max_{\thetavec} Q(\thetavec|\thetavec^{\mbox{old}})
-\]
-
-%\begin{itemize}
-%\item Computing $p(\Zvec|\Xvec,\thetavec^{\mbox{old}})$ `in full' often not necessary. Computing expected values with respect to this distribution often enough (hence the name: E step)
-%\item Just need to know enough about $p(\Zvec|\Xvec,\thetavec^{\mbox{old}})$ to do the M step
-%\end{itemize}
-
-\end{titledslide}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\end{document}
-
-\begin{titledslide}
-\end{titledslide} 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
