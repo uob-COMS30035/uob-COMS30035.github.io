@@ -368,7 +368,7 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
 \begin{frame}[fragile]
 \frametitle{Neural networks -- gradient descent \footnote{\tiny Its called descent because we are minimising the cost function, so descending on the function landscape, which can be quite hilly!}}
 
-\small In many ML methods is common to iteratively update the parameters by descending the gradient. \vspace{10pt}\\
+\small In many ML methods it is common to iteratively update the parameters by descending the gradient. \vspace{10pt}\\
 
 \centerline{\includegraphics[scale=0.25]{../figures/gradient_descent.png}\footnote{\tiny
     Figure from
@@ -378,8 +378,8 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
 \uncover<2->{In our neural network this means to update the weights using:
 
 \begin{itemize}
-	\item \small $w_{ji} = w_{ji} - \Delta w_{ji}$, where $\Delta w_{ji} = \sigma' (y_n - t_n) w_{kj}^T \sigma' x_i$
-	\item \small $w_{kj} = w_{kj} - \Delta w_{kj}$, where $\Delta w_{kj} = \sigma'(y_n - t_n)z_j$
+	\item \small $w_{ji} = w_{ji} - \Delta w_{ji}$, where $\Delta w_{ji} = \sigma'(a_{k}) (y_n - t_n) w_{kj} \sigma'(a_{j}) x_i$
+	\item \small $w_{kj} = w_{kj} - \Delta w_{kj}$, where $\Delta w_{kj} = \sigma'(a_{k})(y_n - t_n)z_j$
 	\item \small This is often done in mini-batches -- using a small number of samples to compute $\Delta w$.
 \end{itemize}}
 

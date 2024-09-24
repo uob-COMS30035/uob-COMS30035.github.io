@@ -135,4 +135,143 @@ layer), and then sending $a_j$ to some nonlinear \emph{activation
 \end{equation}
 and be able to explain what each of the symbols in this formula represent.
 
+\section{Trees}
+\label{sec:trees}
+
+\yntk \dots
+\begin{itemize}
+\item what a classification tree is
+\item what a regression tree is
+\item how trees partition the input space
+\item that trees are a nonparametric method
+\item how the standard CART algorithm for learning trees works,
+  including the final pruning stage
+\end{itemize}
+
+\section{Kernels and SVMs}
+\label{sec:kernels}
+
+\yntk what the following terms mean
+\begin{itemize}
+\item kernel function
+\item the kernel trick
+\item dual parameter
+\item Gram matrix
+\item the margin
+\item support vectors
+\item a soft margin
+\item slack variables
+\end{itemize}
+
+\yntk \dots
+\begin{itemize}
+\item the role of the regularisation parameter in soft margins
+\item how SVMs can be extended to deal with having more than two classes
+\end{itemize}
+
+\section{Probabilistic Graphical Models}
+\label{sec:pgms}
+
+\yntk what the following terms mean
+\begin{itemize}
+\item Directed acyclic graph
+\item Conditional independence
+\item Bayesian network
+\item the structure of a Bayesian network
+\item the parameters of a Bayesian network
+\item child (in a Bayesian network)
+\item parent (in a Bayesian network)
+\item descendant (in a Bayesian network)
+\item path (in a Bayesian network)
+\item collider (in a Bayesian network)
+\item blocked path (in a Bayesian network)
+\end{itemize}
+
+\yntk \dots
+\begin{itemize}
+\item the factorisation of a joint probability distribution defined by
+  the structure of a given Bayesian network
+\item how to use plate notation to compactly represent a Bayesian network
+\item how to translate a machine learning model (described in words)
+  to a Bayesian network
+\item how to use d-separation to check for conditional independence
+  relations in a Bayesian network.
+\end{itemize}
+
+\section{Bayesian machine learning}
+\label{sec:bayesian}
+
+\yntk what the following terms mean
+\begin{itemize}
+\item Prior distribution
+\item Likelihood
+\item Posterior distribution
+\end{itemize}
+
+\yntk{} that in the Bayesian approach: the parameters, the data and
+any unobserved (latent) variables are all represented as random
+variables in a joint probability distribution. Unknown quantities
+(parameters and latent variables) are unobserved random variables,
+know quantities (the data) are observed random variables.
+
+\section{Sampling and MCMC}
+\label{sec:mcmc}
+
+\yntk{} what the following terms mean
+\begin{itemize}
+\item ancestral sampling
+\item rejection sampling
+\item Markov chain
+\item homogeneous Markov chain
+\item initial distribution (in a Markov chain)
+\item transition distribution (in a Markov chain)
+\item Markov chain Monte Carlo
+\item target probability distribution
+\item Metropolis-Hastings algorithm
+\item Metropolis algorithm
+\item proposal distribution
+\item acceptance probability
+\item burn-in
+\item convergence (in context of MCMC)
+\end{itemize}
+
+\yntk \dots
+\begin{itemize}
+\item the equations for the acceptance probability for both the
+  Metropolis and Metropolis-Hastings algorithms.
+\item how a sample from a distribution can be used to approximate an
+  expected value defined by that distribution
+\item that in MCMC we sample from a \textbf{sequence} of distributions
+  and that the samples are not independent
+\item why we throw away samples in the burn-in
+\item why we typically run several chains when doing MCMC
+\item that $\hat{R}$ is a value computed from an MCMC run used to
+  check for convergence; if the run has been successful (i.e.\ there's
+  been convergence) it will be close to 1.
+\end{itemize}
+
+\section{k-means and Gaussian mixtures}
+\label{sec:kmeansetc}
+
+\yntk{} what the following terms mean
+\begin{itemize}
+\item clustering
+\item soft clustering
+\item Gaussian mixture
+\item mixing coefficient
+\item responsibility (in context of a mixture model)
+\end{itemize}
+
+\yntk \dots
+\begin{itemize}
+\item how the k-means algorithm works
+\item that one can do soft clustering by applying MLE to a Gaussian
+  mixture model
+\end{itemize}
+
+\section{The EM algorithm}
+\label{sec:em}
+
+
+
 \end{document}
