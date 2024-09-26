@@ -292,13 +292,16 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
     \delta_{k} = y_{k}-t_{k}    
   \end{equation}
   \begin{itemize}
-  \item For the hidden units we use the chain rule:
+  \item For the hidden units we use (a multivariable version of) the chain rule:
   \end{itemize}
   \[
     \delta_{j} \equiv \frac{\partial E_{n}}{\partial a_{j}} = \sum_{k} \frac{\partial E_{n}}{\partial a_{k}}\frac{\partial a_{k}}{\partial a_{j}} 
   \]
   ``where the sum runs over all units $k$ to which unit $j$ sends
-  connections'' (Bishop). 
+  connections'' (Bishop). ``we are
+making use of the fact that variations in $a_j$ give rise to
+variations in the error function only through variations in the
+variables $a_k$.'' (Bishop).
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{titledslide}{Computing partial derivatives 4}
