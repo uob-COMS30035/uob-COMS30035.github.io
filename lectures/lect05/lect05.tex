@@ -172,7 +172,7 @@ To a Multiple Layer Perceptron (MLP) \footnote{Although, we call it
 	\item \small Pass it through a nonlinear function: $z_j = \sigma(a_j)$ [nonlinear\footnote{In MLP we typically use sigmoid functions.}]
 \uncover<2->{	\item \small Calculate activations of the output layer $o$: $a_k = \mathlarger{\sum_{j=1}^{hiddensize}} w_{kj}^{(o)}z_j + w_{k0}^{(o)}$  [linear]
 	\item \small Compute predictions using a sigmoid: $y_k = \sigma(a_k)$ [nonlinear\footnote{For classification problems we use a sigmoid at the output, where each output neuron codes for one class.}]}
-\uncover<3->{	\item \small All together: $y_k = \sigma \left( \mathlarger{\sum_{i=1}^D} w_{kj} \: \sigma \left(\mathlarger{\sum_{i=1}^D} w_{ji}x_i^{(h)} + w_{j0}^{(h)}\right) + w_{k0}^{(o)} \right)$}
+\uncover<3->{	\item \small All together: $y_k = \sigma \left( \mathlarger{\sum_{i=1}^D} w_{kj} \: \sigma \left(\mathlarger{\sum_{i=1}^D} w_{ji}^{(h)}x_i + w_{j0}^{(h)}\right) + w_{k0}^{(o)} \right)$}
 \end{enumerate}
 
 \end{frame}
