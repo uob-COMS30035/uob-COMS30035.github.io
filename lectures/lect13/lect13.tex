@@ -31,10 +31,10 @@
 \end{frame}
 
 
-\begin{frame}
-\frametitle{Textbook}
-We will follow Chapter 13  of the Bishop book: Bishop, C. M., Pattern recognition and machine learning (2006). Available for free \href{https://www.microsoft.com/en-us/research/people/cmbishop/}{\underline{here}}.
-\end{frame}
+%\begin{frame}
+%\frametitle{Textbook}
+%We will follow Chapter 13  of the Bishop book: Bishop, C. M., Pattern recognition and machine learning (2006). Available for free \href{https://www.microsoft.com/en-us/research/people/cmbishop/}{\underline{here}}.
+%\end{frame}
 
 
 \begin{frame}[fragile]
@@ -407,7 +407,8 @@ form a Markov chain;
 \begin{itemize}
 \item \emph{Hidden Markov Models (HMMs):} Discrete state $z$, observations may be continuous or discrete according to any distribution. $\rightarrow$ next part of this lecture
 \item \emph{Linear Dynamical Systems (LDS):} Continuous state $z$,
-observations are continuous, both have Gaussian distributions $\rightarrow$ after reading week
+observations are continuous, both have Gaussian distributions
+$\rightarrow$ next lecture
 \item We will consider both supervised and unsupervised settings.
 \end{itemize}
 \centering
@@ -722,18 +723,21 @@ value of the unobserved $\bs z_n$.
 p(\bs X, \bs Z | \bs A, \bs \pi, \bs \phi) = p(\bs z_1 | \bs \pi) \prod_{n=2}^N p(\bs z_n | \bs z_{n-1}, \bs A) \prod_{n=1}^N p(\bs x_n | \bs z_n, \bs\phi)
 \end{equation}
 \item $\bs A$, $\bs\pi$ and $\bs\phi$ are parameters that must be learned or marginalised.
-\item Generative model: think of generating each of the state variables $\bs z_n$ in turn, then generating the observation $\bs x_n$ for each generated state.
+\item Generative model: think of generating each of the state
+  variables $\bs z_n$ in turn, then generating the observation $\bs
+  x_n$ for each generated state.
+\item It's ancestral sampling (see Bayesian network lecture), once again.
 \end{itemize}
 % quiz: what kind of model is an HMM? Graphical model, generative model. 
 \end{frame}
 
 
-\begin{frame}
-\frametitle{Now do the quiz!}
-Please do the quiz for this lecture on Blackboard.
+% \begin{frame}
+% \frametitle{Now do the quiz!}
+% Please do the quiz for this lecture on Blackboard.
 
-Next, we will see how to learn an HMM using the EM algorithm.
-\end{frame}
+% Next, we will see how to learn an HMM using the EM algorithm.
+% \end{frame}
 
 
 \begin{frame}[fragile]
@@ -800,14 +804,31 @@ Next, we will see how to learn an HMM using the EM algorithm.
 \begin{frame}
 \frametitle{E step}
 \begin{itemize}
-\item We need to compute expectations of the latent states and pairs of latent states: 
+\item We need to compute expectations of the latent states and pairs
+  of latent states.
+\item (Note that a probability is just a special type of expectation:
+  one for a binary random variable.)
 \item Responsibilities: $\gamma(z_{nk}) = p\left(z_n = k | \bs X, \bs \theta^{(old)} \right) $ %\sum_{\bs Z} p(\bs Z) z_{nk}$
 \item State pairs: $\xi(z_{n-1,j}, z_{nk}) = p\left(z_{n-1}=j, z_n=k | \bs X, \bs \theta^{(old)}\right)$ %\sum_{\bs Z} p(\bs Z) z_{n-1,j} z_{nk}$
 \item To compute these efficiently, we need the \emph{forward-backward} algorithm (coming up in a few slides...)
 \end{itemize}
 
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}
 
+  \begin{itemize}
+  \item ``In the E step, we \dots ﬁnd the posterior distribution of
+    the latent variables $p(\bs Z|\bs X,
+    \bs\theta^{old})$''. \cite[p.616]{bishop06:_patter_recog_machin_learn}
+  \item But note that we don't compute and store the entire
+    distribution $p(\bs Z|\bs X, \bs\theta^{old})$.
+  \item Only the expectations (=probabilities) of the things we need
+    for the subsequent M step.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
 \frametitle{M step}
@@ -952,7 +973,7 @@ how can we predict a sequence of hidden states $\bs Z$?
 \item Most probable labels (given by the values of $\gamma(z_{nk})$) are
 not the same as the most probable \emph{sequence}!
 % they may even represent a very unlikely sequence
-\item We apply a \emph{max-sum} algorithm called \emph{viterbi} to "decode" the sequence
+\item We apply a \emph{max-sum} algorithm called \emph{Viterbi} to ``decode'' the sequence
 with $\mathcal{O}(N)$ computational cost.
 \end{itemize}
 \end{frame}
@@ -1004,12 +1025,44 @@ find the most likely sequence of hidden states.
 \end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Now do the quiz!}
+% \begin{frame}
+% \frametitle{Now do the quiz!}
 
-Please do the quiz for this lecture on Blackboard.
+% Please do the quiz for this lecture on Blackboard.
 
-Next up: linear dynamical systems for modelling continuous states.
-\end{frame}
+% Next up: linear dynamical systems for modelling continuous states.
+% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Reading}
+
+  \begin{itemize}
+  \item Bishop \S13.1
+  \item Bishop \S13.2 up to \S13.2.2
+  \item Bishop \S13.2.5
+  \item Murphy \textbf{Book 2} \cite{pml2Book} \S29.1
+  \item Murphy \textbf{Book 2} \S29.2
+  \item Murphy \textbf{Book 2} \S29.4.1
+  \end{itemize}
+  
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Problems and quizzes}
+
+  \begin{itemize}
+  \item Bishop Exercise 13.6
+  \item Bishop Exercise 13.7
+  \item Quizzes:
+    \begin{itemize}
+    \item Week~5: The EM algorithm
+    \end{itemize}
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{alpha}
+\bibliography{../ml}
+
 
 \end{document}
