@@ -29,13 +29,6 @@
 \end{itemize}
 \end{frame}
 
-
-\begin{frame}
-\frametitle{Textbook}
-We will follow Chapter 14  of the Bishop book: Bishop, C. M., Pattern recognition and machine learning (2006). Available for free \href{https://www.microsoft.com/en-us/research/people/cmbishop/}{\underline{here}}.
-\end{frame}
-
-
 \begin{frame}[fragile]
 \frametitle{The Model Selection Problem}
 % img: a whole bunch of different models?
@@ -242,15 +235,6 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 \end{itemize}
 
 \end{frame}
-
-
-
-\begin{frame}
-\frametitle{Now do the quiz!}
-Please do the quiz for this lecture on Blackboard.
-\end{frame}
-
-
 
 \begin{frame}[fragile]
 \frametitle{Agenda}   % expectation: 33 slides + title and agenda, 11 slides per chunk
@@ -865,7 +849,7 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 \begin{itemize}
 \item Can we do better than choosing training sets at random?
 \uncover<2->{\item Train \emph{base} models sequentially, ensuring that each base model addresses the weaknesses of the ensemble.
-\item Instead random sampling,  weight the data points in the training set according to the performance of previous base models.}
+\item Instead of random sampling,  weight the data points in the training set according to the performance of previous base models.}
 \uncover<3->{\item \emph{AdaBoost} is a popular boosting method originally designed for \emph{binary classification}.}
 \end{itemize}
 
@@ -1111,11 +1095,6 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 \end{frame}
 
 
-\begin{frame}
-\frametitle{Now do the quiz!}
-Please do the quiz for this lecture on Blackboard.
-\end{frame}
-
 \begin{frame}[fragile]
 \frametitle{Agenda}   % expectation: 33 slides + title and agenda, 11 slides per chunk
 \begin{itemize}
@@ -1182,16 +1161,6 @@ Please do the quiz for this lecture on Blackboard.
 \uncover<5->{\item Extremely effective in many applications (see Murphy (2012), Machine Learning: A Probabilistic Perspective, Section 16.2.5)}
 \end{itemize}
 \end{frame}
-
-
-
-
-\begin{frame}
-\frametitle{Now do the quiz!}
-Please do the quiz for this lecture on Blackboard.
-\end{frame}
-
-
 
 \begin{frame}[fragile]
 \frametitle{Agenda}   % expectation: 33 slides + title and agenda, 11 slides per chunk
@@ -1313,13 +1282,36 @@ p(t_n | \bs x_n, \bs \phi, \bs\pi) = \sum_{k=1}^K \pi_k(\bs x_n) p(t_n | \bs x_n
 \end{frame}
 
 
-\begin{frame}
-\frametitle{Now do the quiz!}
-Please do the quiz for this lecture on Blackboard.
-\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Reading}
 
+  \begin{itemize}
+  \item Bishop Chapter 14
+  \item Murphy \S18.2--\S18.5.3
+  \end{itemize}
+  
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Problems and quizzes}
 
-\end{document}
-
+  \begin{itemize}
+  \item Problems:
+    \begin{itemize}
+    \item Bishop 14.2
+    \item Bishop 14.3
+    \end{itemize}
+  \item Quizzes:
+    \begin{itemize}
+    \item Week~8: Model Selection and Averaging
+    \item Week~8: Ensembles
+    \item Week~8: Conditional Mixture Models
+    \end{itemize}
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{alpha}
+\bibliography{../ml}
 
 \end{document}
