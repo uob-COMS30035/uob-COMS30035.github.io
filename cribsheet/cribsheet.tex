@@ -1,8 +1,20 @@
 \documentclass{article}
 
 \usepackage{amsmath}
+\usepackage{bm}
 
-\title{Cribsheet for Machine Learning (COMS30035)}
+\newcommand{\xvec}{\ensuremath{\mathbf{x}}}
+\newcommand{\Xvec}{\ensuremath{\mathbf{X}}}
+\newcommand{\Zvec}{\ensuremath{\mathbf{Z}}}
+\newcommand{\thetavec}{\ensuremath{{\bm \theta}}}
+\newcommand{\xvecn}{\ensuremath{\mathbf{x}_{n}}}
+\newcommand{\zvec}{\ensuremath{\mathbf{z}}}
+\newcommand{\bmu}{\ensuremath{{\bm \mu}}}
+\newcommand{\bcov}{\ensuremath{{\bm \Sigma}}}
+\newcommand{\gauss}{\ensuremath{{\cal N}}}
+
+
+\title{Cribsheet for Machine Learning (COMS30035)\\ Weeks~1--5}
 \author{James Cussens}
 
 \newcommand{\yntk}{You need to know}
@@ -117,10 +129,10 @@ gradient descent.
 \item Dropout
 \end{itemize}
 
-\yntk{} that a unit $j$ in a neural network computes a value $z_j$ by
-first computing $a_j$, a weighted sum of its inputs (from the prevous
-layer), and then sending $a_j$ to some nonlinear \emph{activation
-  function} $h$:
+\yntk{} that a unit $j$ in a neural network (but not in the input
+layer) computes a value $z_j$ by first computing $a_j$, a weighted sum
+of its inputs (from the previous layer), and then sending $a_j$ to
+some nonlinear \emph{activation function} $h$:
 \begin{align}
   \label{eq:preact}
   a_{j} & = \sum_{i}w_{ji}z_{i} \\
@@ -133,7 +145,7 @@ layer), and then sending $a_j$ to some nonlinear \emph{activation
   \label{eq:backprop}
   \delta_{j} = h'(a_{j})\sum_{k}w_{kj}\delta_{k}
 \end{equation}
-and be able to explain what each of the symbols in this formula represent.
+and be able to explain what each of the symbols in this formula represents.
 
 \section{Trees}
 \label{sec:trees}
@@ -151,7 +163,7 @@ and be able to explain what each of the symbols in this formula represent.
 \section{Kernels and SVMs}
 \label{sec:kernels}
 
-\yntk what the following terms mean
+\yntk{} what the following terms mean
 \begin{itemize}
 \item kernel function
 \item the kernel trick
@@ -172,7 +184,7 @@ and be able to explain what each of the symbols in this formula represent.
 \section{Probabilistic Graphical Models}
 \label{sec:pgms}
 
-\yntk what the following terms mean
+\yntk{} what the following terms mean
 \begin{itemize}
 \item Directed acyclic graph
 \item Conditional independence
@@ -201,7 +213,7 @@ and be able to explain what each of the symbols in this formula represent.
 \section{Bayesian machine learning}
 \label{sec:bayesian}
 
-\yntk what the following terms mean
+\yntk{} what the following terms mean
 \begin{itemize}
 \item Prior distribution
 \item Likelihood
@@ -257,7 +269,7 @@ know quantities (the data) are observed random variables.
 \begin{itemize}
 \item clustering
 \item soft clustering
-\item Gaussian mixture
+\item Gaussian mixture model
 \item mixing coefficient
 \item responsibility (in context of a mixture model)
 \end{itemize}
@@ -272,6 +284,46 @@ know quantities (the data) are observed random variables.
 \section{The EM algorithm}
 \label{sec:em}
 
+\yntk{} that
+\begin{itemize}
+\item the EM algorithm is an iterative algorithm that attempts to find
+  a value of $\thetavec$ that maximises the \emph{log-likelihood}:
+  $\ln p(\Xvec | \thetavec)$, where $\Xvec$ is observed data.
+\item there is no guarantee that the EM algorithm will succeed in
+  maximising the log-likelihood. It may converge to a local maximum
+  which is not a global maximum of the log-likelihood function.
+\end{itemize}
 
+If you are given any or all of the following three EM-related equations:
+  \[
+    \ln p(\Xvec | \thetavec)  = {\cal L}(q, \thetavec) + \mathrm{KL}(q
+      || p)
+  \]
+  \begin{eqnarray*}
+    {\cal L}(q, \thetavec) & = & \sum_{\Zvec} q(\Zvec) \ln \left\{
+      \frac{p(\Xvec,\Zvec| \thetavec)}{q(\Zvec)} \right\} \\
+    \mathrm{KL}(q || p) & = & -\sum_{\Zvec} q(\Zvec) \ln \left\{
+      \frac{p(\Zvec|\Xvec, \thetavec)}{q(\Zvec)} \right\}
+  \end{eqnarray*}
+you should be able to explain what each of the symbols in these
+equations represent. It can be helpful to you to simply memorise these
+three equations.
+
+\yntk{} that
+ \begin{itemize}
+  \item $\mathrm{KL}(q
+      || p) \geq 0$ for any choice of $q$, so ${\cal L}(q, \thetavec)
+      \leq \ln p(\Xvec | \thetavec)$.
+    \item In the E-step we increase ${\cal L}(q, \thetavec)$ by
+      updating $q$ (and leaving $\thetavec$ fixed).
+    \item In the M-step we increase ${\cal L}(q, \thetavec)$ by
+      updating $\thetavec$ (and leaving $q$ fixed).
+    \item After the E-step we have
+      ${\cal L}(q, \thetavec) = \ln p(\Xvec | \thetavec)$ (and so $\mathrm{KL}(q
+      || p) = 0$), so that in
+      the following M-step increasing ${\cal L}(q, \thetavec)$ will
+      also increase $\ln p(\Xvec | \thetavec)$.
+  \end{itemize}
+ 
 
 \end{document}
