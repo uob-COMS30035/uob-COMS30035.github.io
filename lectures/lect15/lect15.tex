@@ -24,8 +24,7 @@
 \item Ensembles: Bagging
 \item Ensembles: Boosting and Stacking}
 \item \textcolor{gray}{Tree-based Models} 
-\item \textcolor{gray}{Conditional Mixture Models  
-\item Ensembles of Humans}  
+\item \textcolor{gray}{Conditional Mixture Models}  
 \end{itemize}
 \end{frame}
 
@@ -986,9 +985,12 @@ w_n^{(m)} & \mbox{if }y_m(\bs x_n) = y(\bs x_n)
 \end{equation}
 \end{enumerate}
 \begin{itemize}
-\item The weight is increased when $m$ makes an incorrect prediction.}
+\item The weight is increased when $m$ makes an incorrect prediction
+  (assuming $\epsilon_{m} < \frac{1}{2}$).}
+\item Let's look at Bishop p.660.
 \end{itemize}
 \end{frame}
+
 
 
 \begin{frame}
@@ -1158,7 +1160,7 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 \item Learn the tree using the greedy CART algorithm but when determining each split, consider only $d \ll D$ randomly-chosen features. % d is much less than D
 \end{enumerate}}
 \uncover<4->{\item As with bagging, combine predictions by taking mean/majority vote.}
-\uncover<5->{\item Extremely effective in many applications (see Murphy (2012), Machine Learning: A Probabilistic Perspective, Section 16.2.5)}
+\uncover<5->{\item Extremely effective in many applications}
 \end{itemize}
 \end{frame}
 
@@ -1227,7 +1229,8 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 \frametitle{Mixture of Experts}
 \begin{itemize}
 \item Each data point is processed by a weighted combination of specialised 'expert' models
-\item Weights: probabilities that depend on the features $\bs x_n$ of the data point 
+\item Weights: probabilities that depend on the features $\bs x_n$ of
+  the data point (the `mix' is \emph{conditional} on the datapoint).
  %possibly a combination of models as in conditional mixture model.
 \uncover<2->{\item Think of medical diagnosis: based on the patient's symptoms, a GP refers the patient to a specialist}
 \uncover<3->{\item If they are unsure what is causing the symptoms, they may send the 
