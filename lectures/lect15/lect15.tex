@@ -24,7 +24,7 @@
 \item Ensembles: Bagging
 \item Ensembles: Boosting and Stacking}
 \item \textcolor{gray}{Tree-based Models} 
-\item \textcolor{gray}{Conditional Mixture Models}  
+\item \textcolor{gray}{Mixtures of Experts}  
 \end{itemize}
 \end{frame}
 
@@ -235,16 +235,14 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 
 \end{frame}
 
-\begin{frame}[fragile]
-\frametitle{Agenda}   % expectation: 33 slides + title and agenda, 11 slides per chunk
+\begin{frame}
 \begin{itemize}
 \item \textcolor{gray}{Model Selection}
 \item Model Averaging
-\item Ensembles: Bagging
-\item Ensembles: Boosting and Stacking
+\item \textcolor{gray}{Ensembles: Bagging
+\item Ensembles: Boosting and Stacking}
 \item \textcolor{gray}{Tree-based Models  
-\item Conditional Mixture Models 
-\item Ensembles of Humans} 
+\item Mixtures of Experts} 
 \end{itemize}
 \end{frame}
 
@@ -309,8 +307,7 @@ p(h|\bs X) = \frac{p(\bs X | h)p(h)}{\sum_{h'=1}^H p(\bs X | h')p(h')}
 \item Ensembles: Bagging
 \item Ensembles: Boosting and Stacking
 \item \textcolor{gray}{Tree-based Models  
-\item Conditional Mixture Models 
-\item Ensembles of Humans} 
+\item Mixtures of Experts} 
 \end{itemize}
 \end{frame}
 
@@ -1098,15 +1095,13 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 
 
 \begin{frame}[fragile]
-\frametitle{Agenda}   % expectation: 33 slides + title and agenda, 11 slides per chunk
 \begin{itemize}
 \item \textcolor{gray}{Model Selection
 \item Model Averaging
 \item Ensembles: Bagging
 \item Ensembles: Boosting and Stacking}
 \item Tree-based Models  % decision trees effectively make the selection decisions on the fly; random forests then are ensembles. Maybe trees should be discussed before committees?
-\item \textcolor{gray}{Conditional Mixture Models  % this may be in the next "lecture"?
-\item Ensembles of Humans}  
+\item \textcolor{gray}{Mixtures of Experts}  % this may be in the next "lecture"?
 \end{itemize}
 \end{frame}
 
@@ -1172,8 +1167,7 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 \item Ensembles: Bagging
 \item Ensembles: Boosting and Stacking
 \item Tree-based Models}  % decision trees effectively make the selection decisions on the fly; random forests then are ensembles. Maybe trees should be discussed before committees?
-\item Conditional Mixture Models  % this may be in the next "lecture"?
-\item \textcolor{gray}{Ensembles of Humans}  
+\item Mixtures of Experts  % this may be in the next "lecture"?
 \end{itemize}
 \end{frame}
 
@@ -1184,17 +1178,20 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 \item Model selection: choose the right model for the whole dataset $\rightarrow$ \emph{hard selection}
 \item Bayesian model averaging (BMA): probabilistically select the right model for the whole dataset $\rightarrow$ \emph{soft selection}
 \item Decision trees: split the feature space and model each region by one leaf node $\rightarrow$ \emph{hard selection depending on features}
-\uncover<2->{\item Conditional mixture models: perform a soft, probabilistic split of the feature space $\rightarrow$ \emph{soft selection depending on features}}
+\uncover<2->{\item Mixtures of experts: perform a soft, probabilistic split of the feature space $\rightarrow$ \emph{soft selection depending on features}}
 %\emph{combine} models 
 %\item Mixture of experts: probabilistically weight the models depending on inputs --> \emph{combine depending on features}
 \end{itemize}
 \end{frame}
 
-%\begin{frame}
-%\frametitle{Conditional Mixture Models}
-%\begin{itemize}
-%\item Similar to the mixture models we saw in earlier lectures
-%\item For regression or classification, rather than clustering
+\begin{frame}
+\frametitle{Conditional Mixture Models}
+\begin{itemize}
+\item Similar to the mixture models we saw in earlier lectures
+\item For regression or classification, rather than clustering
+\item The prediction for the output target variable $y$ depends, i.e.\
+  is \emph{conditional} on, the input feature vector $\bs x$
+\item We will only be looking at one conditional mixture model called \emph{Mixture of Experts}
 %\begin{itemize}
 %\item Target variable $t$
 %\item Feature vector $\bs x$
@@ -1204,8 +1201,8 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 %\item Learn parameters using EM
 %\end{itemize}
 %\item Each data point is generated from one mixture component as in the Gaussian mixture model (GMM).
-%\end{itemize}
-%\end{frame}
+\end{itemize}
+\end{frame}
 %
 %
 %\begin{frame}
@@ -1230,7 +1227,7 @@ flow/.style={thick, gray, decoration={markings,mark=at position
 \begin{itemize}
 \item Each data point is processed by a weighted combination of specialised 'expert' models
 \item Weights: probabilities that depend on the features $\bs x_n$ of
-  the data point (the `mix' is \emph{conditional} on the datapoint).
+  the data point.
  %possibly a combination of models as in conditional mixture model.
 \uncover<2->{\item Think of medical diagnosis: based on the patient's symptoms, a GP refers the patient to a specialist}
 \uncover<3->{\item If they are unsure what is causing the symptoms, they may send the 
@@ -1279,6 +1276,11 @@ MoE reproduces the target function by learning weights for each model and taking
 \begin{equation}
 p(t_n | \bs x_n, \bs \phi, \bs\pi) = \sum_{k=1}^K \pi_k(\bs x_n) p(t_n | \bs x_n, \bs\phi_k)
 \end{equation}
+\item Note that here, like Bishop, we are assuming that each component
+  provides a distribution $p(t_n | \bs x_n, \bs\phi_k)$ over the
+  target and the mixture thus also gives us a distribution over the
+  target: $p(t_n | \bs x_n, \bs \phi, \bs\pi)$. We can use e.g.\ the
+  mode of this distribution to provide a predicted value for the target.
 \item $\pi_k(\bs x_n)$ is the weight for model $k$ in a combination of models.
 \item The weights can be learned as part of EM (see Bishop 14.5.3 for more)
 \end{itemize}
@@ -1289,7 +1291,7 @@ p(t_n | \bs x_n, \bs \phi, \bs\pi) = \sum_{k=1}^K \pi_k(\bs x_n) p(t_n | \bs x_n
 \begin{titledslide}{Reading}
 
   \begin{itemize}
-  \item Bishop Chapter 14
+  \item Bishop Chapter 14, but you can skip: \S14.3.1, \S14.3.2, \S14.5.1, \S14.5.2.
   \item Murphy \S18.2--\S18.5.3
   \end{itemize}
   

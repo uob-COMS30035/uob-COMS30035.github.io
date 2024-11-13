@@ -1,6 +1,6 @@
 \documentclass{article}
 
-\usepackage{amsmath}
+\usepackage{amsmath, amssymb}
 \usepackage{bm}
 
 \newcommand{\xvec}{\ensuremath{\mathbf{x}}}
@@ -13,8 +13,11 @@
 \newcommand{\bcov}{\ensuremath{{\bm \Sigma}}}
 \newcommand{\gauss}{\ensuremath{{\cal N}}}
 
+\newcommand{\bs}{\boldsymbol}
 
-\title{Cribsheet for Machine Learning (COMS30035)\\ Weeks~1--5}
+
+
+\title{Cribsheet for Machine Learning (COMS30035)}
 \author{James Cussens}
 
 \newcommand{\yntk}{You need to know}
@@ -156,7 +159,7 @@ and be able to explain what each of the symbols in this formula represents.
 \item what a regression tree is
 \item how trees partition the input space
 \item that trees are a nonparametric method
-\item how the standard CART algorithm for learning trees works,
+\item how the standard greedy algorithm (CART) for learning trees works,
   including the final pruning stage
 \end{itemize}
 
@@ -325,5 +328,143 @@ three equations.
       also increase $\ln p(\Xvec | \thetavec)$.
   \end{itemize}
  
+\section{Hidden Markov models}
+\label{sec:hmms}
+
+\yntk{} that
+\begin{itemize}
+\item A hidden Markov model (HMM) is a state space model where the states
+  are discrete.
+\item An HMM is defined by an initial distribution over states $p(\bs
+  z_1 | \bs \pi)$, emission distributions $p(\bs x_n | \bs z_n,
+  \bs\phi)$ and state transition distributions $p(\bs z_n | \bs
+  z_{n-1}, \bs A)$ where the joint distribution over states $\bs Z$
+  and observations $\bs X$ is:
+\[  p(\bs X, \bs Z | \bs A, \bs \pi, \bs \phi) = p(\bs z_1 | \bs \pi) \prod_{n=2}^N p(\bs z_n | \bs z_{n-1}, \bs A) \prod_{n=1}^N p(\bs x_n | \bs z_n, \bs\phi)
+\]
+where $\bs A$, $\bs\pi$ and $\bs\phi$ are the parameters defining the
+initial, emission and transition distributions, respectively.
+\item The observations for an HMM can be discrete or continuous and
+  there is no restriction on the emission distributions.
+\item If the sequence of states $\bs Z$ is not observed then the EM
+  algorithm can be used to (attempt to) find values of the parameters
+  $(\bs \pi, \bs \phi, \bs A)$ which maximise the log-likelihood $\ln
+  p(\bs X | \bs A, \bs\pi, \bs\phi)$.
+\item When using the EM algorithm for HMMs it is not necessary (in the
+  E step) to compute and fully represent the distribution
+  $p(\bs Z|\bs X, \bs\theta^{old})$. Only certain expectations with
+  respect to this distribution are required (for the following M
+  step). These are computed using the forward-backward algorithm.
+\item The forward pass of the forward-backward algorithm computes for each time-step $n>1$ and state value $k$: 
+$\alpha(z_{nk})  = p(\bs x_1,...,\bs x_n, z_{n}=k | \bs\pi, \bs A, \bs\phi) \nonumber\\
+=  p(\bs x_n | z_{n}=k, \bs\phi_k) \sum_{l=1}^K A_{lk}
+\alpha(z_{n-1,l})$
+\item The backward pass of the forward-backward algorithm computes for each time-step $n<N$ and state value $k$: $\beta(z_{nk})  = p(\bs x_{n+1},...,\bs x_N |  z_{n}=k, \bs A, \bs\phi )  
+ = \sum_{l=1}^K A_{kl} p(\bs x_{n+1} | z_{n+1}=l, \bs\phi_l)  \beta(z_{n+1,l})
+$
+\item The forward and backward probabilities ($\alpha(z_{nk})$ and
+  $\beta(z_{nk})$) can be used to compute the expectations for the E
+  step (but you don't need to memorise the relevant equations, nor the
+  equations for the M step).
+\item There is an algorithm called the Viterbi algorithm which can
+  efficiently find, for a particular HMM, the most probable sequence
+  of states given a sequence of observations. You do not need to be
+  able to describe this algorithm.
+\end{itemize}
+
+\section{Linear Dynamical Systems}
+\label{sec:lds}
+
+\yntk{} that
+\begin{itemize}
+\item A linear dynamical system (LDS) is a state space model where the states
+  are continuous.
+\item The initial state, state transition and emission distributions
+  for an LDS are, respectively:
+  \begin{enumerate}
+  \item $p(\bs z_1) = \mathcal{N}(\bs z_1 | \bs\mu_0, \bs V_0)$;
+  \item $p(\bs z_n | \bs z_{n-1}) = \mathcal{N}(\bs z_n | \bs A \bs z_{n-1}, \bs\Gamma)$;
+  \item $p(\bs x_n | \bs z_n) = \mathcal{N}(\bs x_n | \bs C \bs z_n, \bs\Sigma)$.
+  \end{enumerate}
+  where $(\bs\mu_0, \bs V_0, \bs A, \bs \Gamma, \bs C, \bs \Sigma)$ are
+  the parameters of the LDS.
+\item The LDS analogue to computing HMM forward probabilities is
+  called the Kalman filter. (You don't need to memorise the relevant equation.)
+\item The LDS analogue to computing HMM backward probabilities is
+  called the Kalman smoother. (You don't need to memorise the relevant
+  equation.)
+\item There is no need for an analogue to the Viterbi algorithm for
+  LDS, since the most likely sequence of states is just the sequence
+  of most probable states.
+\end{itemize}
+
+\section{Ensemble methods}
+\label{sec:ensembles}
+
+\yntk{} what the following terms mean:
+\begin{itemize}
+\item Model selection
+\item Bayesian model averaging
+\item Bagging
+\item Boosting
+\item Stacking
+\item Hyperparameters
+\item Random search for good hyperparameters
+\item Grid search for good hyperparameters
+\item Random forest
+\item Conditional mixture model
+\item Mixture of experts
+\end{itemize}
+
+You do not need to know about
+\begin{itemize}
+\item  Bayesian Optimisation
+\end{itemize}
+
+\yntk{}
+\begin{itemize}
+\item How predictions are made using Bayesian model averaging, namely:
+  \[
+    p(\bs z | \bs X) = \sum_{h=1}^H p(\bs z | \bs X, h)p(h|\bs X)
+  \]
+\item If $E_{COM}$ is the expected error of a simple ensemble which
+  makes predictions as follows: $y_{COM}(\bs x) = \frac{1}{M} \sum_{m=1}^M
+  y_m(\bs x)$ and $E_{AV}$ is the average expected error of an
+  individual model then $E_{COM} = \frac{1}{M} E_{AV}$ as long as:
+  \begin{enumerate}
+  \item The errors of each model have zero mean.
+  \item The errors of different models are not correlated.
+  \end{enumerate}
+\item Even if the above 2 assumptions do not hold we still have
+  $E_{COM} \leq  E_{AV}$.
+\item How bagging works, as described, for example on slide L15:23/46.
+\item How AdaBoost works, as described, for example on slide
+  L15:30/46.
+\item How predictions are made from an AdaBoost ensemble, namely:
+  \[
+    y_M(\bs x_n) = \sum_{m=1}^M \alpha_m y_m(\bs x_n)
+  \]
+  where $\alpha_{m} = \ln \left(
+    \frac{1-\epsilon_{m}}{\epsilon_{m}}\right)$ and where
+  $\epsilon_{m}$ is the weighted error rate of model $m$. 
+\item A random forest is a collection of trees built where each
+  individual tree is built as follows: a dataset of size $N$ is sampled with
+  replacement from the original dataset which has $N$ datapoints; when
+  determining a split only a randomly selected set of $d$ features are
+  considered where $d \ll D$ where $D$ is the total number of features
+  in the data.
+\item Predictions from random forests are typically made using the
+  mean (for regression) or majority vote (for classification).
+\item In a Mixture of Experts model where the component models provide
+  a distribution over the target variable, the distribution given by
+  the mixture is:
+  \[
+    p(t_n | \bs x_n, \bs \phi, \bs\pi) = \sum_{k=1}^K \pi_k(\bs x_n) p(t_n | \bs x_n, \bs\phi_k)
+  \]
+  Note that the weights $\pi_k(\bs x_n)$ depend on the
+  input $x_n$.
+\item EM can be used to learn the parameters of a Mixture of Experts model.
+\end{itemize}
+
 
 \end{document}
