@@ -146,7 +146,19 @@ y &0 &1 &3 &9
 \uncover<10->{$y = 1.8 + 2.9 x$}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Computational methods for linear regression}
 
+  \begin{itemize}
+  \item Although $\hat{\theta} = (\textbf{X}^T \textbf{X})^{-1}
+    \textbf{X}^T \textbf{y}$, $\hat{\theta}$ is never (well, should
+    never) be computed by computing $(\textbf{X}^T \textbf{X})^{-1}$
+  \item Instead \emph{Singular Value Decomposition} or \emph{QR
+      decomposition} is used to derive $\hat{\theta}$.
+  \item See \cite[\S 11.2.2.3]{pml1Book} for further details.
+  \end{itemize}
+  
+\end{frame}
 
 
 \begin{frame}[fragile]
@@ -296,7 +308,7 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
 \begin{itemize}
 \item The simplest linear discriminant (LD) is $\boxed{y(x) = w_0 + \bm{w^Tx}}$
 	\begin{itemize}
-		\item \textcolor{darkgray}{where $y$ is used to predicted class $C_k$, $x$ is the input vector (feature values)
+		\item \textcolor{darkgray}{where $y$ is used to predict class $C_k$, $x$ is the input vector (feature values)
 		\item $w_0$ is a scalar, which we call \emph{bias}
 		\item $w_T$ is our vector of parameters, which we call \emph{weights}}		
 	\end{itemize}\vspace{5pt}
@@ -468,5 +480,8 @@ Using sklearn we fitted a logistic regression classifier to the data: \vspace{5p
   
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{alpha}
+\bibliography{../ml.bib}
 
 \end{document}
