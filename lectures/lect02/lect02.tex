@@ -81,41 +81,40 @@
 \begin{frame}[fragile]
 
   \frametitle{Unsupervised learning}
-  Only the input data is provided and models learn to extract patterns from the data.\vspace{5pt}
-  \centerline{\includegraphics[scale=0.5]{../figures/unsupervised_learning.pdf}}
+  Only the input data is provided and models learn to extract patterns from the data.%\vspace{5pt}
+  %\centerline{\includegraphics[scale=0.5]{../figures/unsupervised_learning.pdf}}
   
-  \uncover<2->{
     Example tasks \footnote{Note that virtually all models that do not use explicit teaching signals, such as targets/labels or rewards are unsupervised.}:
     \begin{itemize}
     \item Clustering: grouping similar items together (e.g., K-means, unsupervised HMM) \vspace{3pt}
     \item Dimensionality reduction (e.g.\ PCA): finding a simplified representation of input data with fewer dimensions \vspace{3pt}
-    \item Density estimation (mixture models,  language models):  used to estimate the probabilities of input data points \vspace{3pt}	
+    \item Density estimation (mixture models,  language models):  used
+      to estimate the probability distributions from data \vspace{3pt}	
     \end{itemize}
-  }
   
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]
 
   \frametitle{Supervised learning\vspace{3pt}}
-  Each input is paired with an output -- a ``label'' or ``target'' -- and the model is trained to minimise the error (difference) between its output and the target.\vspace{5pt}
-  \centerline{\includegraphics[scale=0.45]{../figures/supervised_learning.pdf}}
+  Each input is paired with an output -- a ``label'' or ``target'' -- and the model is trained to minimise the error (difference) between its output and the target.%\vspace{5pt}
+  %\centerline{\includegraphics[scale=0.45]{../figures/supervised_learning.pdf}}
   
-  \uncover<2->{
+  %\uncover<2->{
     Example tasks:
     \begin{itemize}
     \item Regression: numerical outputs (e.g.\  air temperatures over time)
     \item Classification: category labels (e.g.\  dog or bagel?) \vspace{3pt}
     \end{itemize}
-  }
-  \uncover<3->{
+  %}
+  %\uncover<3->{
     Many learning methods can be used for both regression and classification:
     \begin{itemize}
     \item Supervised neural networks
     \item Support vector machines
     \item Decision trees
     \end{itemize}
-  }
+  %}
   
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -198,11 +197,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]
   
-  \frametitle{Model selection} Relying only on the validation dataset
-  to select our models can lead us to overfit to that data, in
-  particular for small datasets and iterative methods. So it is often
-  common to use a third subset, the \emph{testing
-    dataset}.\vspace{5pt}
+  \frametitle{Model selection}
   \begin{itemize}
   \item \textbf{Testing dataset}: Used to test the model for general
     fitting quality after the optimisation procedure has
