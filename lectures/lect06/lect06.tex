@@ -3,7 +3,25 @@
 \newcommand{\lectnum}{L06}
 \newcommand{\lecttitle}{Training Neural Networks}
 
-\input{../preamble.tex}
+\input{preamble.tex}
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \titlepage
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Acknowledgement}
+
+  \begin{itemize}
+  \item These slides are adapted from ones originally created by
+    \href{https://www.dpag.ox.ac.uk/team/rui-ponte-costa}{Rui Ponte
+      Costa} and later edited by Edwin Simpson and James Cussens. 
+  \end{itemize}
+  
+\end{titledslide}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{titledslide}{Problems and solutions when training neural networks}
 
@@ -70,7 +88,7 @@
     from reaching good weights.
   \item A solution to this is simply to choose activation functions
     that don't saturate.
-  \item Let's look at \cite[Fig~13.4]{pml1Book}.
+  \item Let's look at \cite[Fig~13.2]{pml1Book}.
   \item ReLU and its variants are popular choices. But not that plain
     ReLU has zero gradient for negative values so we might end up with
     the `dead ReLU' problem.
