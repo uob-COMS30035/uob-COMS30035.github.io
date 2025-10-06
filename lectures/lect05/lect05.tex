@@ -444,11 +444,12 @@ variables $a_k$.'' (Bishop).
     \url{https://mc.ai/an-introduction-to-gradient-descent-2/} (link
     no longer working)}}
 
-\uncover<2->{In our neural network this means to update the weights using:
+\uncover<2->{In our neural network (one hidden layer) this means to update the weights using:
 
 \begin{itemize}
-	\item \small $w_{ji}^{new} = w_{ji}^{old} - \Delta w_{ji}$, where $\Delta w_{ji} = \sigma'(a_{k}) (y_n - t_n) w_{kj} \sigma'(a_{j}) x_i$
-	\item \small $w_{kj}^{new} = w_{kj}^{old} - \Delta w_{kj}$, where $\Delta w_{kj} = \sigma'(a_{k})(y_n - t_n)z_j$
+	\item \small Output: $w_{kj}^{new} = w_{kj}^{old} - \Delta w_{kj}$, where $\Delta w_{kj} = h'(a_{k})(y_k - t_k)z_j$
+	\item \small Hidden $w_{ji}^{new} = w_{ji}^{old} - \Delta w_{ji}$, where $\Delta w_{ji} = h'(a_{j}) \sum_{k}w_{kj}(y_k - t_k)h'(a_{k}) x_i$
+
     \item \small
 $w_{kj}^{new} = w_{kj}^{old} - {\color{red}\eta}\,\Delta w_{kj}$,
 where $\eta$ denotes the learning rate.
