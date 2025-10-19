@@ -17,6 +17,21 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Clustering}
+
+\begin{itemize}
+  \item Supervised vs Unsupervised learning.
+  \item \textbf{Two methods:}
+    \begin{itemize}
+      \item $k$-means: simple distance-based clustering.
+      \item Gaussian Mixture Models (GMMs): probabilistic soft clustering.
+    \end{itemize}
+  % \item \textbf{Motivation:} Understand how $k$-means arises as a special case of GMMs with isotropic covariance.
+\end{itemize}
+
+\end{titledslide}
+
+
 \begin{titledslide}{$k$-means for clustering}
 
 \includegraphics[trim=2.8in 2in 2in 1.8in,width=1.2\textwidth,clip]{../figures/kmeansstages.pdf}
@@ -43,13 +58,76 @@
     \label{eq:mean}
     \bmu_{k} = \frac{\sum_{n} r_{nk}\xvec_{n}}{\sum_{n} r_{nk}}
   \end{equation}
+
+  % The algorithm minimizes:
+  %   \[
+  %   J = \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} \, \lVert x_n - \mu_k \rVert^2,
+  %   \]
+
   
 \end{titledslide}
+
+\begin{titledslide}{$k$-means objective function}
+
+\begin{itemize}
+  \item We want each point $\xvec_n$ to be close to its assigned cluster mean $\bmu_k$.
+  \item Objective: minimize total squared distance to cluster centers.
+\end{itemize}
+
+\[
+J = \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} \, \lVert \xvec_n - \bmu_k \rVert^2
+\]
+
+\begin{itemize}
+  \item Optimize by alternating:
+    \begin{enumerate}
+      \item Initialize $K$ centers.
+      \item Repeat until convergence (cluster assignments stop changing).
+        \begin{itemize}
+            \item \textbf{E-step:} Assign each $\xvec_n$ to its nearest $\bmu_k$.
+          \item \textbf{M-step:} Update each $\bmu_k$ as the mean of its assigned points. 
+        \end{itemize}
+          
+    \end{enumerate}
+  
+\end{itemize}
+
+\end{titledslide}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Pros and cons of $k$-means}
+
+\textbf{Advantages}
+\begin{itemize}
+  \item Simple and fast: scales linearly with the number of data points $N$, clusters $K$, and dimensions $D$.
+  \item Easy to implement and interpret — each cluster is summarized by its mean $\bmu_k$.
+  \item Works well for roughly spherical and well-separated clusters.
+  \item Often a good first choice for exploratory data analysis or initialization (e.g., for EM in GMMs).
+\end{itemize}
+
+\vskip0.5cm
+
+\textbf{Disadvantages}
+\begin{itemize}
+  \item Requires pre-specifying the number of clusters $K$.
+  \item Assumes clusters are isotropic (spherical) and of similar size.
+  \item Sensitive to initialization — can get stuck in local minima.
+  \item Sensitive to outliers and noise (means can be pulled by extreme points).
+  \item Produces \emph{hard} assignments only — no uncertainty in cluster membership.
+\end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \begin{titledslide}{Gaussian mixture distribution}
 
 
-  Well, here it is \cite[\S 9.2]{bishop06:_patter_recog_machin_learn}
+  A Gaussian mixture model (GMM) assumes that data is generated from a mixture of $K$ Gaussian components: \cite[\S 9.2]{bishop06:_patter_recog_machin_learn}
 
   \begin{equation}
     \label{eq:guassmix}
@@ -57,14 +135,14 @@
   \end{equation}
 
   We can associate the \emph{mixing coefficients} $\pi_k$ with a $K$-dimensional
-  random variable \xvec{} where:
-  \begin{eqnarray*}
+  latent variable $z$ where:
+  \begin{equation}
     \label{eq:zk}
-    z_{k} & \in & \{0,1\} \\
-    \sum_{k} z_{k} &= & 1 \\
-    p(z_{k}=1)  & = & \pi_{k} \\
-  \end{eqnarray*}
-  so we have
+    z_{k} \in \{0,1\}, \quad 
+    \sum_{k} z_{k} = 1, \quad 
+    p(z_{k}=1)  = \pi_{k}
+  \end{equation}
+  Then, the marginal likelihood can be written as:
   \begin{equation}
     \label{eq:guassmixtwo}
     p(\xvec) = \sum_{\zvec} p(\zvec) p(\xvec|\zvec) = \sum_{k=1}^{K} \pi_{k} \gauss(\xvec|\bmu_{k},\bcov_{k})
@@ -106,6 +184,12 @@
   \begin{itemize}
   \item If we want we can put restrictions on the covariance matrices
     of the Gaussians in the mixture.
+    \begin{itemize}
+        \item Spherical: $\sum_k = \sigma_k^2 I$
+        \item Diagonal: $\sum_k = \text{diag}(\sigma_{1}^2, \sigma_{2}^2, ..., \sigma_{K}^2)$
+        \item Full: No constraint; captures correlations between features.
+    \end{itemize}
+
   \item Let's have a look at \cite[p.729]{pml1Book}
   \end{itemize}
   
@@ -115,8 +199,7 @@
 
   \begin{itemize}
   \item Given data \Xvec{} (and a fixed number $K$ of component Gaussians) we 
-    can use MLE to get a particular Gaussian mixture distribution.
-  \item This gives us a `soft clustering'.
+    can use MLE to estimate a particular Gaussian mixture distribution.
   \item Here's the log-likelihood
     \cite[433]{bishop06:_patter_recog_machin_learn}:
   \end{itemize}
@@ -137,6 +220,23 @@
   \end{itemize}
   
 \end{titledslide}
+
+
+
+\begin{titledslide}{Comparing $k$-means and GMMs}
+
+% \begin{center}
+% \includegraphics[width=0.8\textwidth]{../figures/kmeans_vs_gmm.pdf}
+% \end{center}
+
+\begin{itemize}
+  \item $k$-means: hard assignments, spherical clusters.
+  \item GMM: soft assignments, elliptical clusters.
+  \item GMM generalizes $k$-means when $\Sigma_k = \sigma^2 I$ and $\pi_k$ are equal.
+\end{itemize}
+
+\end{titledslide}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{titledslide}{Reading}
