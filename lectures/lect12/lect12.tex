@@ -288,6 +288,23 @@ The same equation in different notation is:
   
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Pros and Cons of the EM Algorithm}
+\textbf{Advantages:}
+  \begin{itemize}
+  \item Effectively handles models with unobserved (latent) variables.
+  \item Always converges to a local optimum (log-likelihood non-decreasing).
+  \item Derived from maximizing a lower bound on the likelihood.
+  \item Essential for many ML algorithms (GMMs, HMMs, missing data, etc.).
+  \end{itemize}
+\textbf{Disadvantages:}
+  \begin{itemize}
+  \item Convergence only to a local maximum, not necessarily global. Initialization is critical.
+  \item Can be very slow, especially for complex or high-dimensional data.
+  \item E and M steps can be challenging to derive for new models.
+  \item Requires careful initialization or multiple runs.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{titledslide}{Reading}
 
   \begin{itemize}
