@@ -46,7 +46,7 @@
   \item ML attempts to learn \textbf{models} of the world
     \begin{itemize}
     \item Usually with many simplifications
-    \item Models are a way of understanding how \textbf{input} data relates to the  \textbf{outputs}
+    \item Models are typically a way of understanding how \textbf{input} data relates to the  \textbf{outputs}
     \item E.g., a function that maps weather observations to predictions
     \end{itemize}	
     % \item\uncover<2->{Models are simplifications of the world: }
@@ -67,14 +67,9 @@
         \vspace{10pt}}
     \end{itemize}
   \uncover<3->{
-  \item The data available defines which form of learning we can
-    use\vspace{10pt}} \uncover<4->{
-  \item However, the principle is always the same: \underline{model
-      the data}..
-    \begin{itemize}
-    \item \dots the model assumptions and data structure vary
-    \end{itemize}
-  \end{itemize}}
+  \item The type of data available, and its size, sets limits on which forms
+    of learning we can use.} 
+  \end{itemize}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -97,14 +92,16 @@
 \begin{frame}[fragile]
 
   \frametitle{Supervised learning\vspace{3pt}}
-  Each input is paired with an output -- a ``label'' or ``target'' -- and the model is trained to minimise the error (difference) between its output and the target.%\vspace{5pt}
+  Each input is paired with an output -- a ``label'' or ``target'' --
+  and the model is trained to minimise the error (difference) between
+  its output and the target. Sometimes we minimise the error plus a complexity penalty.%\vspace{5pt}
   %\centerline{\includegraphics[scale=0.45]{../figures/supervised_learning.pdf}}
   
   %\uncover<2->{
     Example tasks:
     \begin{itemize}
-    \item Regression: numerical outputs (e.g.\  air temperatures over time)
-    \item Classification: category labels (e.g.\  dog or bagel?) \vspace{3pt}
+    \item Regression: continuous outputs, typically numbers (e.g.\  air temperatures over time)
+    \item Classification: discrete outputs, typically category labels (e.g.\  dog or bagel?) \vspace{3pt}
     \end{itemize}
   %}
   %\uncover<3->{
@@ -200,7 +197,8 @@
   \frametitle{Model selection}
   \begin{itemize}
   \item \textbf{Testing dataset}: Used to test the model for general
-    fitting quality after the optimisation procedure has
+    fitting quality after the optimisation procedure (i.e.\ the
+    machine learning) has
     finished \begin{small}(e.g.\ use 10\% of the full
       dataset)\end{small}.
 \end{itemize}
@@ -283,8 +281,16 @@
 
 \uncover<2->{\begin{itemize}
 	\item Using model selection we can obtain a \emph{good model}.
-	\item \emph{But} there is no universally best model -- \textbf{no free lunch theorem} (Wolpert 1996).
-	\item \uncover<3->{Why? Models always make assumptions and these often do not generalise across domains -- different domains need different models.}
+	\item \emph{But} there is no universally best model selection procedure-- \textbf{no free lunch theorem} (Wolpert 1996).
+	\item \uncover<3->{Why? Models always make assumptions and
+            these often do not generalise across domains -- different
+            domains need different models.}
+          \item \uncover<4->{No free lunch results are essentially a
+              reinvention of the \emph{problem of induction} studied
+              in philosophy
+            \item `` \dots happenings which depend upon an infinite
+              number of cases cannot be determined by a finite number
+              of experiments \dots'' (Leibniz in a 1703 letter to Bernoulli).}
 \end{itemize}}
 
 
