@@ -16,7 +16,8 @@
   \begin{itemize}
   \item These slides are adapted from ones originally created by
     \href{https://www.dpag.ox.ac.uk/team/rui-ponte-costa}{Rui Ponte
-      Costa} and later edited by Edwin Simpson and James Cussens. 
+      Costa} and later edited by Edwin Simpson, James Cussens and
+    Xiyue Zhang. 
   \end{itemize}
   
 \end{titledslide}
@@ -47,8 +48,8 @@
 
 
 \begin{itemize}
-	\item It is the very beginning of neural network models in ML! \vspace{3pt}\\
-	\item It is directly inspired by how neurons process information: \vspace{3pt}\\	
+	\item The very beginning of neural network models in ML! \vspace{3pt}\\
+	\item Directly inspired by how neurons process information: \vspace{3pt}\\	
 	\centerline{\includegraphics[scale=0.4]{figures/Rosenblatt_neuron.pdf}}
 \uncover<2->{	\item It is an example of a linear discriminant model given by $y(\bm{x}) = f(\bm{w}^T\phi(\bm{x}))$\\ 
 	with a nonlinear \emph{activation function} $f(a) = \begin{cases}
@@ -57,7 +58,9 @@
 \end{cases} $}
 \uncover<3->{
 \item Here the target $t = \{+1, -1\}$.
-\item And we aim to minimise the following error $ - \mathlarger{\sum_{n=1}^N \bm{w}^T\phi_nt_n }$ \footnote{Intuitively we want to improve our chances of having $t_n = y_n = -1$ or $t_n = y_n = 1$, which will both decrease our error function.}}
+\item We aim to minimise the following error $ -
+  \mathlarger{\sum_{n \in {\cal M}} \bm{w}^T\phi_nt_n }$, where $\cal
+  M$ denotes the misclassified datapoints and $\phi_{n} = \phi({\bm x}_{n})$.}
 \end{itemize}
 
 \end{frame}
@@ -182,16 +185,16 @@ From a single layer perceptron:\\
 \begin{frame}[fragile]
 \frametitle{Neural networks}
 
-To a Multiple Layer Perceptron (MLP) \footnote{Although, we call it
-  perceptron, it typically uses logistic {\color{blue} sigmoid} activation functions
-  (continuous nonlinearities), instead of step-wise discontinuous
-  nonlinearities. 
-  % NB the first and second weight vectors will be
-  % different, despite both being denoted by $w$ here.
-  }:\vspace{5pt}\\
+To a two-layer neural network (from Bishop):
+\centerline{\includegraphics[width=\textwidth]{../figures/nn.png}}
 
-	\centerline{\includegraphics[scale=0.5]{figures/MLP_variant.pdf}}
-
+If we use a sigmoidal output unit \emph{activation function} then the
+overall network function would be:
+\[
+  y_{k}({\bm x},{\bm w}) = \sigma\left(\sum_{j=1}^{M} w_{kj}^{(2)}
+    h\left( \sum_{i=1}^{D}w_{ji}^{(1)}x_{i} + w_{j0}^{(1)}\right) + w_{k0}^{(2)}\right)
+\]
+where $h$ is some differentiable, nonlinear activation function. 
 \end{frame}
 
 
@@ -201,9 +204,9 @@ To a Multiple Layer Perceptron (MLP) \footnote{Although, we call it
 
 \begin{itemize}
 	\item Neural networks are at heart composite functions of linear-nonlinear functions. 
-	\item \textbf{Deep learning}\footnote{If you would like to learn more take our Applied Deep Learning unit in your 4th year.} refers to neural networks (or MLPs) with more than 1 hidden layer\\	
-	\item They can be applied in any form of learning, but we will focus on \underline{supervised learning} and classification in particular\\	
-\uncover<2->{	\item MLP recipe \footnote{Here we focus on simple feedforward nets but the recipe is the same for any neural network.}:
+	\item \textbf{Deep learning} refers to neural networks  with more than 1 hidden layer\\	
+	\item They can be applied in any form of learning, but we will focus on supervised learning and classification in particular\\	
+\uncover<2->{	\item Neural network recipe \footnote{Here we focus on simple feedforward nets but the recipe is the same for any neural network.}:
 	\begin{itemize}	
 		\item Define architecture (i.e.\ how many hidden layers and neurons) \footnote{Note that this makes them parametric models.}
 		\item Define cost function (e.g.\ mean squared error)
@@ -225,12 +228,14 @@ To a Multiple Layer Perceptron (MLP) \footnote{Although, we call it
 \begin{frame}[fragile]
 \frametitle{Neural networks -- forward pass step-by-step}
 
+Assume just one hidden layer and $\sigma$ for the output activation function\dots
+
 \begin{enumerate}
-	\item \small Calculate activations of the hidden layer $h$: $a_j = \mathlarger{\sum_{i=1}^D} w_{ji}^{(h)}x_i + w_{j0}^{(h)}$  [linear]
-	\item \small Pass it through a nonlinear function: $z_j = \sigma(a_j)$ [nonlinear\footnote{In MLP we typically use sigmoid functions.}]
-\uncover<2->{	\item \small Calculate activations of the output layer $o$: $a_k = \mathlarger{\sum_{j=1}^{hiddensize}} w_{kj}^{(o)}z_j + w_{k0}^{(o)}$  [linear]
-	\item \small Compute predictions using a sigmoid: $y_k = \sigma(a_k)$ [nonlinear\footnote{For classification problems we use a sigmoid at the output, where each output neuron codes for one class.}]}
-\uncover<3->{	\item \small All together: $y_k = \sigma \left( \mathlarger{\sum_{j=1}^D} w_{kj} \: \sigma \left(\mathlarger{\sum_{i=1}^D} w_{ji}^{(h)}x_i + w_{j0}^{(h)}\right) + w_{k0}^{(o)} \right)$}
+	\item \small Calculate activations of the hidden layer: $a_j = \mathlarger{\sum_{i=1}^D} w_{ji}^{(1)}x_i + w_{j0}^{(1)}$  [linear]
+	\item \small Pass it through a nonlinear function: $z_j = \sigma(a_j)$ [nonlinear]
+\uncover<2->{	\item \small Calculate activations of the output layer: $a_k = \mathlarger{\sum_{j=1}^{M}} w_{kj}^{(2)}z_j + w_{k0}^{(2)}$  [linear]
+	\item \small Compute predictions using a sigmoid: $y_k = \sigma(a_k)$ [nonlinear]}
+\uncover<3->{	\item \small All together: $y_k = \sigma \left( \mathlarger{\sum_{j=1}^M} w_{kj}^{(2)}  h \left(\mathlarger{\sum_{i=1}^D} w_{ji}^{(1)}x_i + w_{j0}^{(1)}\right) + w_{k0}^{(2)} \right)$}
 \end{enumerate}
 
 \end{frame}
