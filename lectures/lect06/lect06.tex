@@ -3,21 +3,15 @@
 \newcommand{\lectnum}{L06}
 \newcommand{\lecttitle}{Training Neural Networks}
 
-\input{preamble.tex}
+\input{../preamble.tex}
 
-\begin{document}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}
-  \titlepage
-\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{titledslide}{Acknowledgement}
 
   \begin{itemize}
   \item These slides are adapted from ones originally created by
     \href{https://www.dpag.ox.ac.uk/team/rui-ponte-costa}{Rui Ponte
-      Costa} and later edited by Edwin Simpson and James Cussens. 
+      Costa} and later edited by Edwin Simpson, Wei-Hong Li and James Cussens. 
   \end{itemize}
   
 \end{titledslide}
@@ -42,7 +36,7 @@
   \begin{itemize}
   \item This lecture is nothing more than a summary of (some of) the
     material that can be found in Chapter~13 of Kevin Murphy's book
-    \cite{pml1Book}
+    \cite{pml1Book}.
   \item We'll be switching from these slides to look at some of the
     figures in that Chapter occasionally.
   \end{itemize}
@@ -84,12 +78,12 @@
   \begin{itemize}
   \item The sigmoid activation function, for example, \emph{saturates}
     at large negative or large positive values.
-  \item So its gradient there will be 0 preventing gradient descent
+  \item So its gradient there will be 0, preventing gradient descent
     from reaching good weights.
   \item A solution to this is simply to choose activation functions
     that don't saturate.
   \item Let's look at \cite[Fig~13.2]{pml1Book}.
-  \item ReLU and its variants are popular choices. But not that plain
+  \item ReLU and its variants are popular choices. But note that plain
     ReLU has zero gradient for negative values so we might end up with
     the `dead ReLU' problem.
   \item Note also that ReLU is not a differentiable function at 0, but we
@@ -142,8 +136,8 @@
 \begin{titledslide}{Dealing with overfitting}
 
   \begin{itemize}
-  \item Neural networks often have many parameters (ChatGPT has 175
-    billion!) so overfitting is an issue.
+  \item Neural networks often have many parameters (e.g.\ GPT-5 has
+    perhaps about 1.5 trillion!) so overfitting is an issue.
   \item If we have a very large training dataset the problem is, at
     least, greatly reduced. (GPT-3.5 used 570GB of data, about 300
     billion words).
@@ -193,7 +187,7 @@
 \begin{titledslide}{Dropout}
 
   \begin{itemize}
-  \item \emph{Dropout} is where, during training, we randomly turn of
+  \item \emph{Dropout} is where, during training, we randomly turn off
     all outgoing connections from a unit with some given probability
     $p$.
   \item Do this on a per-example basis : ``For each presentation of each training case, a new thinned network is sampled and
@@ -216,9 +210,7 @@ trained.'' \cite{JMLR:v15:srivastava14a}
   \item There is of course much more to learn about neural networks.
   \item Most notably we have not looked into how the choice of
     \emph{architecture} (neural network structure) is made \dots
-  \item \dots for example, convolutional NNs for image data.
-  \item Also there has recently been a lot of attention on
-    \emph{attention}: where the weights can depend on the input.
+  \item \dots for example, \emph{transformers} using \emph{attention}.
   \item We'll finish off our look at neural nets by going through some
     examples with PyTorch \dots
   \end{itemize}
