@@ -49,7 +49,7 @@
   
 \frametitle{Revisiting regression -- deterministic model}
 
-\textbf{\textcolor{blue}{Data:}} a set of data points $D = \{ (x_1, y_1), (x_2, y_2), \cdots, (x_N, y_N) \}$ where $x_i$ is the number of rooms of house $i$ and $y_i$ the house value.
+\textbf{\textcolor{blue}{Data:}} a set of data points $D = \{ (x_1, y_1), (x_2, y_2), \cdots, (x_N, y_N) \}$ where $x_n$ is the number of rooms of house $n$ and $y_n$ the house value.
 \vspace{6pt}
 
 \textbf{\textcolor{blue}{Task:}} build a model that can predict the house value from the number of rooms
@@ -60,7 +60,7 @@
 
 \uncover<3->{\textbf{\textcolor{red}{Model Complexity:}} assume the relationship is linear $\text{house value} = a_0 + a_1 \times \text{rooms}$
 \begin{equation}
-y_i = a_0 + a_1 x_i
+y_n = a_0 + a_1 x_n
 \end{equation}}
 \vspace{6pt}
 
@@ -82,10 +82,12 @@ y_i = a_0 + a_1 x_i
   will not typically be consistent with such an assumption. So \dots
 \item Find $\theta=(a_{0},a_{1})$ which minimises 
 \begin{equation}
-R(a_{0},a_{1}) = \sum_{i=1}^N {(y_i - (a_{0} + a_{1}x_i))^2}
+  R(a_{0},a_{1}) = \sum_{n=1}^N {(y_n - (a_{0} + a_{1}x_n))^2}
 \end{equation}
-\item This is the \textcolor{blue}{sum of squared residuals}.
-\item Using matrix notation we have:
+\item $R$ is an abbreviation for \textcolor{blue}{residual sum of
+    squares} (sometimes written $\mathrm{RSS}$).
+\item Using matrix notation, then for any parameter vector $\theta$,
+  which defines a linear function, we have:
 \end{itemize}
 
 \[
@@ -93,10 +95,11 @@ R(a_{0},a_{1}) = \sum_{i=1}^N {(y_i - (a_{0} + a_{1}x_i))^2}
 \]
 
 \begin{itemize}
-\item Here $X_{i,j}$ is the value of the $j$th feature in the $i$th
+\item Here $X_{n,j}$ (the value at row $n$, column $j$ of
+  $\mathbf{X}$) is the value of the $j$th feature in the $n$th
   datapoint (where we add a fake feature which is always 1 to handle
-  the intercept), and $y_i$ is the value of the \emph{response} in the
-  $i$th datapoint.
+  the intercept), and $y_n$ is the value of the \emph{response} in the
+  $n$th datapoint.
 \item Setting $\frac{\partial R}{\partial \theta}$ to 0 and
   re-arranging we get:
 \end{itemize}
@@ -108,23 +111,23 @@ R(a_{0},a_{1}) = \sum_{i=1}^N {(y_i - (a_{0} + a_{1}x_i))^2}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\begin{frame}[fragile]
+% \begin{frame}[fragile]
   
-  \frametitle{Linear regression for nonlinear models}
+%   \frametitle{Linear regression for nonlinear models}
   
-  \begin{itemize}
-  \item For a polynomial of degree $p+1$ we use \begin{tiny}(note:
-      $p>1$ gives nonlinear regression)\end{tiny}
-  \end{itemize}
+%   \begin{itemize}
+%   \item For a polynomial of degree $p+1$ we use \begin{tiny}(note:
+%       $p>1$ gives nonlinear regression)\end{tiny}
+%   \end{itemize}
 
-  \begin{equation}
-    y_i = a_0 + a_1 x_i + a_2 x_i^2 + \cdots + a_{p} \ x_{i}^{p} 
-  \end{equation}
+%   \begin{equation}
+%     y_i = a_0 + a_1 x_i + a_2 x_i^2 + \cdots + a_{p} \ x_{i}^{p} 
+%   \end{equation}
   
 
-\end{frame}
+% \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]
+\begin{frame}[fragile,label={ols}]
 \frametitle{Least Squares Solution}
 \begin{example}
 Find the best least squares fit by a linear function to the data using $p=1$
@@ -162,64 +165,105 @@ y &0 &1 &3 &9
 
 
 \begin{frame}[fragile]
-\frametitle{Regression with probabilistic models}
+\frametitle{Probabilistic model assumed when doing linear regression}
 
-\begin{small}\textbf{Probabilistic models are a core part of ML}, as they allow us to also capture the uncertainty the model has about the data, which is critical for real world applications. For simplicity, lets drop $a_0$ from the previous model and add a random variable $\epsilon$ that captures the uncertainty \end{small}
+\begin{small}\textbf{Probabilistic models are a core part of ML}, as
+  they represent uncertainty about future predictions, which is
+  critical for real world applications. For simplicity, let's drop
+  $a_0$ from the previous model. We add a random variable $\epsilon$
+  that captures the uncertainty of predicted house prices\end{small}
 \begin{equation*}
 \text{house price} = a_1 \times \text{number of rooms} + \epsilon
 \end{equation*}
 
 
-\uncover<2->{We can assume, for example, that $\epsilon$ is given by $\mathcal{N}(\mu=0, \sigma^2)$ which gives the likelihood
+\uncover<2->{For linear regression, we assume that $\epsilon$ is given
+  by $\mathcal{N}(\mu=0, \sigma^2)$---a zero mean Gaussian
+  distribution---which gives the (conditional) \textbf{\textcolor{blue}{likelihood}}
 \begin{align*}
-p(\textbf{y}|\textbf{X},\theta) &= \prod\limits_{i=1}^N{p(\text{price}_i | \text{rooms}_i, \theta)} = \prod\limits_{i=1}^N {\frac{1}{\sqrt{2 \pi} \sigma} e^{-\frac{1}{2}\frac{(\text{price}_i - a_1\text{rooms}_i)^2}{\sigma^2}}}
+p(\mathbf{y}|\mathbf{X},a_{1},\sigma^2) &= \prod\limits_{n=1}^N{p(\text{price}_n | \text{rooms}_n, a_{1},\sigma^2)} = \prod\limits_{n=1}^N {\frac{1}{\sqrt{2 \pi} \sigma} e^{-\frac{1}{2}\frac{(\text{price}_n - a_1\text{rooms}_n)^2}{\sigma^2}}}
 \end{align*}}
 
 %\begin{equation*}
 %p(\epsilon) = \frac{1}{\sqrt{2 \pi} \sigma} e^{-\frac{\epsilon^2}{2 \sigma^2}}
 %\end{equation*}}
 
-\uncover<3->{\small This model has \textcolor{red}{two} parameters: the slope $a_1$ and variance $\sigma$ \footnote{\tiny Note that here $\mu = a_0$ which, for simplicity, we assume to be zero.}
+\uncover<3->{\small This distribution over $\mathbf{y}$ conditional on
+  $\mathbf{X}$ is determined by the slope $a_1$ and variance $\sigma^2$ \footnote{\tiny Note that here $\mu = a_0$ which, for simplicity, we assume to be zero.}
 \vspace{0pt}
 
 \centerline{\includegraphics[scale=0.15]{../figures/probabilistic_line.png}}}
 
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Where's the estimate for $\sigma^2$ ?}
 
-
-
-
+  \begin{itemize}
+  \item When we computed the least squares fit for some data back on
+    slide~\ref{ols}, no estimate for $\sigma^2$ was given.
+  \item If we want $\hat{\sigma}^2$, an estimate for $\sigma^2$, it's easy
+    enough to get from the observed errors:
+  \[
+    \hat{\sigma}^2 = \frac{1}{N-p-1}R(\hat{\theta}) = \frac{1}{N-p-1}\sum_{n=1}^{N}(y_{n}-\hat{y}_{n})^{2}
+  \]
+  
+\item 
+  $N$ is the number of datapoints, $p$ the number of estimated parameters
+  and $\hat{y}_{n}$ is the predicted value for $y_{n}$.
+\item We divide by $N-p-1$, rather than the more intuitive $N$, to get
+  an \textbf{unbiased} estimator.
+\item Idea is: if $N$ were small, but $p$ were big, then
+  $R(\hat{\theta})/N$ would underestimate the uncertainty.
+  $R(\hat{\theta})$ might even be 0.
+\end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[fragile]
 \frametitle{Maximum Likelihood Estimation}
 
 \begin{itemize}
-\item Similar to building deterministic models, probabilistic model parameters need to be tuned/trained
 \item \textbf{\textcolor{blue}{Maximum-likelihood estimation (MLE)}} is a method of estimating the parameters of a probabilistic model.
-\vspace{8pt}
-\uncover<2->{\item Assume \textcolor{blue}{$\boldsymbol{\theta}$}  is a vector of all parameters of the probabilistic model. (e.g. $\boldsymbol{\theta} = \{a_1, \sigma\}$).
-\item \textbf{\textcolor{blue}{MLE}} is an extremum
-  estimator\footnote{\begin{tiny} ``Extremum estimators are a wide class of estimators for parametric models that are calculated through maximization (or minimization) of a certain objective function, which depends on the data.'' wikipedia.org\end{tiny}} obtained by maximising an objective function of $\boldsymbol{\theta}$}
+\uncover<2->{\item Assume $\boldsymbol{\theta}$  is a vector of all parameters of the probabilistic model. (e.g. $\boldsymbol{\theta} = \{a_1, \sigma^2\}$).
+\item MLE produces an estimate
+  $\hat{\boldsymbol{\theta}}$ of $\boldsymbol{\theta}$ by maximising
+  an \textbf{\textcolor{blue}{objective function}} 
+  of $\boldsymbol{\theta}$.}
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Maximum Likelihood Estimation}
+\frametitle{Maximising Objective Functions}
 
 \begin{definition}
-Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), the \textcolor{blue}{$arg\,max$} corresponds to the value of $\theta$ that attains the maximum value of the objective function $f$
-
+  \begin{itemize}
+  \item 
+Assume $f(\theta)$ is an objective function to be optimised
+(e.g. maximised), the \textcolor{blue}{$arg\,max$} value is that value
+of $\theta$ which gives the maximum value of the objective function $f$:
+\end{itemize}
+\end{definition}
+If
 \vspace{8pt}
 \uncover<2->{\begin{equation*}
 \hat{\theta} = arg\,max_{\theta} \, f(\theta)
 \end{equation*}}
-\end{definition}
+then
+\begin{equation*}
+\forall \theta: f(\hat{\theta}) \geq f(\theta)  
+\end{equation*}
+
+
+
+
 
 \begin{itemize}
 %\uncover<3->{\item \textbf{\textcolor{red}{Note:}} this is different than maximising the function (i.e. finding the maximum value [$max \, f(\theta)$])}
-\uncover<3->{\item  Tuning the parameter is then equal to finding the maximum argument $arg\,max$}
-
+  \uncover<3->{
+  \item Here, we are assuming that there is only one $\hat{\theta}$
+    which maximises $f$. Of course, this is not always the case.
+  \item  `Learning' the parameter is then equal to finding the maximum argument $arg\,max$}.
 \end{itemize}
 
 \end{frame}
@@ -229,14 +273,15 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
 \frametitle{Maximum Likelihood Estimation - General}
 
 \begin{itemize}
-\item Maximum Likelihood Estimation (MLE) is a common method for solving such problems
+\item If $D$ is the data, then the
+  \textbf{\textcolor{blue}{likelihood}} is simply $f(\theta) = P(D|\theta)$.
 \begin{align*}
 \theta_{MLE} &= arg\,max_\theta \, p(D|\theta)\\
  &= arg\,max_\theta \, \ln p(D|\theta)\\
  &= arg\,min_\theta \, -\ln p(D|\theta)
 \end{align*}
 \vspace*{-6pt}
-\uncover<2->{\begin{block}{MLE Recipe}
+\uncover<2->{\begin{block}{Sometimes this recipe for MLE works:}
 \begin{enumerate}
 \vspace{6pt}
 \uncover<3->{\item Determine $\theta$, $D$ and expression for likelihood $p(D|\theta)$}
@@ -259,7 +304,7 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
   \item In the case of standard linear regression one can prove that
     the parameters which minimise the squared error are also the MLE
     parameters.
-  \item Note that in general the MLE recipe just given will only find
+  \item Note that in general the MLE recipe on the previous slide will only find
     local maxima of the likelihood (so not necessarily the MLE).
   \item But in the special case of linear regression it does find the MLE.
   \end{itemize}
@@ -268,19 +313,25 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]
-\frametitle{Data Modelling - Deterministic vs Probabilistic}
+\frametitle{Representing uncertainty}
 
 \begin{itemize}
-\item \textbf{\textcolor{blue}{Probabilistic Models}} can tell us \textcolor{red}{more}
-\uncover<2->{\item We could use the same MLE recipe to find \textcolor{red}{$\sigma_{ML}$}. This would tell us how uncertain our model is about the data $D$.}
-\uncover<3->{\item For example: if we apply this method to two datasets ($D_1$ and $D_2$) what would the parameters $\theta = \{{a_1},\sigma\}$ be?}
+\item If we apply MLE to two datasets ($D_1$ and $D_2$) what would the parameters $\theta = \{{a_1},\sigma^2\}$ be?
 \end{itemize}
-\uncover<4->{\centerline{\includegraphics[scale=0.35]{../figures/low_var.png}\includegraphics[scale=0.35]{../figures/high_var.png}}}
+\centerline{\includegraphics[scale=0.35]{../figures/low_var.png}\includegraphics[scale=0.35]{../figures/high_var.png}}
 
-\uncover<5->{\centerline{${a_1}_{ML}^{D_1} > {a_1}_{ML}^{D_2} \:$ \small{[slope]} and \textcolor{red}{$\: \sigma_{ML}^{D_1} < \sigma_{ML}^{D_2}$ \small{[uncertainty\footnote{The uncertainty ($\sigma$) is represented by the light green bar in the plots. Test it yourself.}]}}}}
+\begin{itemize}
+\item 
+$\hat{a}_1(D_1) > \hat{a}_1(D_2) \:$ \small{[slope]} and
+\textcolor{red}{$\: \hat{\sigma}^{2}(D_1) < \hat{\sigma}^{2}(D_2)$ \small{[uncertainty]}}
+\item Note that the linear regression model assumes the level of
+  uncertainty is constant, but in both these data plots this appears
+  not to be the case.
+\item So linear regression is perhaps not the best model for this data.
+\end{itemize}
 
 \end{frame}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -288,12 +339,14 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
 \frametitle{Classification}
 
 \begin{itemize}
-\item It is the classical example of \textbf{supervised learning} \vspace{10pt}
+\item Classification is an example of \textbf{supervised learning} \vspace{10pt}
 \item Goal: Classify input data into one of $K$ classes \vspace{10pt}
 \uncover<2->{\item Model: \emph{Discriminant function}:\vspace{5pt}
 	\begin{itemize}
-		\item A function that takes an input vector $x$ and assigns it to class $C_k$. 
-		For simplicity we will focus on $K=2$ and will first study linear functions (see Bishop for the general cases).
+        \item A function that takes an input vector $\bm x$ and assigns it
+          to class $C_k$.  For simplicity we will focus on $K=2$ and
+          will first study linear functions (see Bishop for the
+          general cases).
 	\end{itemize}}
 \end{itemize}
 
@@ -306,23 +359,26 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
 \frametitle{Linear discriminant function}
 
 \begin{itemize}
-\item The simplest linear discriminant (LD) is $\boxed{y(x) = w_0 + \bm{w^Tx}}$
+\item The simplest linear discriminant (LD) is $\boxed{y(\bm{x}) = w_0 + \bm{w^Tx}}$
 	\begin{itemize}
-		\item \textcolor{darkgray}{where $y$ is used to predict class $C_k$, $x$ is the input vector (feature values)
+		\item \textcolor{darkgray}{where $y$ is used to predict class $C_k$, $\bm{x}$ is the input vector (feature values)
 		\item $w_0$ is a scalar, which we call \emph{bias}
-		\item $w_T$ is our vector of parameters, which we call \emph{weights}}		
+		\item $\bm{w}$ is our vector of parameters, which we call \emph{weights}}		
 	\end{itemize}\vspace{5pt}
-\uncover<2->{\item This looks like linear regression! Except the next step...}
-\uncover<3->{\item For $K=2$: An input vector $x$ is assigned to class $C_1$ if $y(x) \geq 0$ and to class $C_2$ otherwise.}
-\uncover<4->{\item A direct application of least-squares to choose
-  $w_0$ and $\mathbf{w}$ does not give great results. See Bishop \S
-  4.1.3}
-\uncover<5->{\item Instead we can assume the data from each class has
-  a Gaussian distribution whose mean is class-specific (but where the
-  covariance matrix for each class is the same), use MLE to find parameters
-  for each of these Gaussians and finally use Bayes theorem to assign
-  classes. See
-  \href{https://scikit-learn.org/stable/modules/lda_qda.html}{scikit-learn explanation}.}
+        \uncover<2->{\item This looks like linear regression! Except
+          the next step...}  \uncover<3->{\item For $K=2$: An input
+          vector $\bm x$ is assigned to class $C_1$ if $y({\bm x}) \geq 0$ and
+          to class $C_2$ otherwise.}  \uncover<4->{\item A direct
+          application of least-squares to choose $w_0$ and
+          $\mathbf{w}$ does not give great results. See Bishop \S
+          4.1.3} \uncover<5->{\item Instead we can assume the data
+          from each class has a multivariate Gaussian distribution
+          whose mean is class-specific (but where the covariance
+          matrix for each class is the same), use MLE to find
+          parameters for each of these Gaussians and finally use Bayes
+          theorem to assign classes. See
+          \href{https://scikit-learn.org/stable/modules/lda_qda.html}{scikit-learn
+            explanation}.}
 \end{itemize}
 \end{frame}
 
@@ -330,9 +386,21 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
 \begin{frame}[fragile]
 \frametitle{LD and linear separability}
 
+\begin{itemize}
+\item ``Data sets whose classes can be separated exactly by linear
+  decision surfaces are said to be \emph{linearly separable}.''
+  \cite[p.179]{bishop06:_patter_recog_machin_learn}.
+\item We generated two sets of points using two Gaussians to
+  illustrate this point, which can easily be fit by a LD.
+\item A \emph{decision boundary} is the boundary that separates the
+  two given classes---on one side red is more likely, on the other
+  blue---which our models will try to find.
+\item Note that in the data we can have a red dot where a blue is more
+  likely, just by chance.
+\end{itemize}
+
 \begin{example}
-\emph{Linear separability} is when two sets of points are separable by a line. We generated two sets of points using two Gaussians to illustrate this point, which can easily be fit by a LD. A \emph{decision boundary} is the boundary that separates the two given classes, which our models will try to find.\\	
-\centerline{\includegraphics[scale=0.4]{../figures/linear_separable.png}}
+  \centerline{\includegraphics[scale=0.4]{../figures/linear_separable.png}}
 \end{example}
 
 \end{frame}
@@ -342,11 +410,12 @@ Assume $f(\theta)$ is an objective function to be optimised (e.g. maximised), th
 \frametitle{Linear separability vs nonlinear separability}
 
 \begin{example}
-Which datasets \textbf{are} and \textbf{are not} linearly separable\footnote{Example from Sklearn \href{https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html}{here}.}? \vspace{5pt}\\	
+Which datasets have classes which \textbf{are} and \textbf{are not} linearly separable\footnote{Example from Sklearn \href{https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html}{here}.}? \vspace{5pt}\\	
 \centerline{\includegraphics[scale=0.5]{../figures/inputdata.png}}
 \end{example}
 
-\uncover<2->{Only the first dataset is linearly separable!}
+\uncover<2->{(Looks like) only the first dataset has linearly
+  separable classes.}
 
 \end{frame}
 
@@ -373,12 +442,14 @@ As expected, the LD model only does a good job in finding a good separation in t
 \frametitle{Logistic regression}
 
 \begin{itemize}
-\item We use a logistic function to obtain the probability of class $C_k$: $\boxed{y(\bm{x}) = \sigma(\bm{w^Tx})}$ where $\sigma$ denotes the logistic sigmoid function (s-shaped), for example:
+\item Assume again we have only two classes. We use a logistic function to obtain the probability of class $C_k$: $\boxed{y(\bm{x}) = \sigma(\bm{w^Tx})}$ where $\sigma$ denotes the logistic sigmoid function (s-shaped), for example:
 \centerline{\includegraphics[scale=0.2]{../figures/logistic_function.png}}
-\uncover<2->{\item such that when $y \to 0$ we choose class 2 and $y \to 1$ class 1.
+\uncover<2->{
+\item $\sigma(\eta) = 1/(1+\exp(-\eta))$
 \item Taking a probabilistic view: 
 
 $p(C_1|\bm{x}) = y(\bm{x})$, and $p(C_2|\bm{x}) = 1- p(C_1|\bm{x})$.}
+\uncover<3->{\item NB. $\sigma$ does not represent standard deviation here!}
 \end{itemize}
 
 \end{frame}
@@ -389,10 +460,21 @@ $p(C_1|\bm{x}) = y(\bm{x})$, and $p(C_2|\bm{x}) = 1- p(C_1|\bm{x})$.}
 
 Follow MLE recipe:
 \begin{enumerate}
-	\item Define likelihood: For a dataset $\{x_n, t_n\}$, where the targets $t_n \in \{0,1\}$ we have $p(\bm{t}|\bm{x},\bm{w}) = \mathlarger{\prod_{n=1}^N} y_n^{t_n} (1 - y_n)^{1-t_n}$ where $y_n = p(C_1|x_n)$. \footnote{The exponent selects the probability of the target class (i.e. if $t_n = 1$ we get $y_n$; if $t_n = 0$ we get $1-y_n$).}
-\uncover<2->{	\item Take negative logarithm of the likelihood \footnote{Note that we used the logarithm product and power rule.}: $-ln\:p(\bm{t}|\bm{x},\bm{w}) = - \mathlarger{\sum_{n=1}^N}\{t_n ln\:y_n + (1-t_n)ln(1-y_n)\}$}
-\uncover<3->{	\item Calculate the derivative w.r.t. the parameters $\bm{w}$:\footnote{This solution makes sense since we want to optimise the difference between the model output $y$ and the desired targets $t$.} \\ $\frac{d\:ln\:p(\bm{t}|\bm{x},\bm{w})}{d \bm{w}} = \mathlarger{\sum_{n=1}^N} (y_n - t_n)x_n$ }
-\uncover<4->{	\item Now we can use Eq. above to directly update $\bm{w}$ using the data $x$.}
+\item Define likelihood: For a dataset $\{x_n, t_n\}$, where the
+  targets $t_n \in \{0,1\}$ we have
+  $p(\bm{t}|\bm{x},\bm{w}) = \mathlarger{\prod_{n=1}^N} y_n^{t_n} (1 -
+  y_n)^{1-t_n}$ where $y_n = p(C_1|x_n)$.\footnote{The exponent
+    selects the probability of the target class (i.e. if $t_n = 1$ we
+    get $y_n$; if $t_n = 0$ we get $1-y_n$).}  \uncover<2->{ \item
+    Take negative logarithm of the likelihood:
+    $-\ln\:p(\bm{t}|\bm{x},\bm{w}) = - \mathlarger{\sum_{n=1}^N}\{t_n
+    \ln\:y_n + (1-t_n)\ln(1-y_n)\}$} \uncover<3->{ \item Calculate the
+    derivative w.r.t. the parameters $\bm{w}$:\footnote{This solution
+      makes sense since we want to optimise the difference between the
+      model output $y$ and the desired targets $t$.} \\
+    $\frac{d\:\ln\:p(\bm{t}|\bm{x},\bm{w})}{d \bm{w}} =
+    \mathlarger{\sum_{n=1}^N} (y_n - t_n)x_n$ } \uncover<4->{ \item
+    Use this derivative (gradient) to iteratively improve $\bm{w}$.}
 \end{enumerate}
 
 \end{frame}
@@ -402,12 +484,14 @@ Follow MLE recipe:
 \includegraphics[scale=0.25]{../figures/grad_desc.jpeg}
 \begin{itemize}
 \item Start with random weight values 
-\item We want to adjust each weight $w$  to minimise negative log likelihood: move downhill to the minimum
-\item The derivative represents the slope: $\frac{d\:ln\:p(\bm{t}|\bm{x},\bm{w})}{d \bm{w}} = \mathlarger{\sum_{n=1}^N} (y_n - t_n)x_n$
-\item Increase or decrease $w$ by a small amount in the downward
+\item We want to adjust each weight in $\bm w$  to minimise negative log likelihood: move downhill to the minimum
+\item The derivative represents the slope: $\frac{d\:\ln\:p(\bm{t}|\bm{x},\bm{w})}{d \bm{w}} = \mathlarger{\sum_{n=1}^N} (y_n - t_n)x_n$
+\item Increase or decrease $\bm w$ by a small amount in the downward
   direction
 \item In the particular case of logistic regression the error function
   is \emph{convex} which means it has a unique minimum.
+\item NB. The 2006 edition of the Bishop book incorrectly states that
+  the error function is \emph{concave}. This was corrected in 2009.
 \end{itemize}
 \end{frame}
 
@@ -417,8 +501,8 @@ Follow MLE recipe:
 
 More details on calculating the derivative:
 \begin{enumerate}
-	\item	From here $-ln\:p(\bm{t}|\bm{x},\bm{w}) = - \mathlarger{\sum_{n=1}^N}\{t_n ln\:y_n + (1-t_n)ln(1-y_n)\}$
-\uncover<2->{	\item We get $\mathlarger{\sum_{n=1}^N}\{ - \frac{t_n}{y_n} + \frac{(1-t_n)}{1-y_n}\} \{y_n(1-y_n)\}x_n$ \footnote{We used the chain rule and $d\: ln(x) = 1/x$. We also used the derivative of the sigmoid $d y_n = y(1-y_n)$.}}
+	\item	From here $-\ln\:p(\bm{t}|\bm{x},\bm{w}) = - \mathlarger{\sum_{n=1}^N}\{t_n \ln\:y_n + (1-t_n)\ln(1-y_n)\}$
+\uncover<2->{	\item We get $\mathlarger{\sum_{n=1}^N}\{ - \frac{t_n}{y_n} + \frac{(1-t_n)}{1-y_n}\} \{y_n(1-y_n)\}x_n$ \footnote{We used the chain rule and $d\: \ln(x) = 1/x$. We also used the derivative of the sigmoid $d y_n = y(1-y_n)$.}}
 \uncover<3->{	\item The above simplifies to $\mathlarger{\sum_{n=1}^N}\{ - t_n (1-y_n) + (1-t_n)y_n\}x_n$}
 \uncover<4->{	\item And in turn to $\mathlarger{\sum_{n=1}^N}\{ y_n - t_n \} x_n$ \footnote{You can find the full derivation \href{https://uob-coms30035.github.io/lectures/lect04/CrossEntropy.html}{here}.}}
 \end{enumerate}
