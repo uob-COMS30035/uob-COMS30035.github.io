@@ -117,7 +117,58 @@ is chosen by traversing the binary decision tree, following
 \end{enumerate}
 \end{itemize}
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Splits at a node in the tree}
 
+  We will be following the notation and explanation given by Murphy
+  since this is clearer than Bishop's.
+  
+  \begin{itemize}
+  \item Suppose we are considering the best split for node $i$ in a
+    tree.
+  \item Let ${\cal D}_i$ be the datapoints which reach node $i$.
+  \item If the $j$th feature is a real-value scalar then a split on
+    threshold $t$ looks like:
+    \begin{eqnarray*}
+      {\cal D}^{L}_{i}(j,t) & = & \{(\mathbf{x}_{n},y_{n}) \in {\cal D}_{i} :
+      x_{n,j} \leq t \} \\
+      {\cal D}^{R}_{i}(j,t) & = & \{(\mathbf{x}_{n},y_{n}) \in {\cal D}_{i} :
+      x_{n,j} > t \} 
+    \end{eqnarray*}
+  \item For real-valued thresholds, it's enough to consider the values
+    of feature $j$ we observe in the data.
+  \item If the $j$th feature is categorical a split on
+    value $t$ looks like:
+    \begin{eqnarray*}
+      {\cal D}^{L}_{i}(j,t) & = & \{(\mathbf{x}_{n},y_{n}) \in {\cal D}_{i} :
+      x_{n,j} = t \} \\
+      {\cal D}^{R}_{i}(j,t) & = & \{(\mathbf{x}_{n},y_{n}) \in {\cal D}_{i} :
+      x_{n,j} \neq t \} 
+    \end{eqnarray*}
+  \item NB. Murphy sometimes has $N_i$ when it should be ${\cal D}_{i}$.
+  \end{itemize}
+
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The best possible split}
+
+  The best possible split is:
+  \[
+    (j_{i},t_{i}) = \arg \min_{j \in \{1,\dots D\}} \min_{t \in {\cal
+        T}_{j}} \frac{|{\cal D}^{L}_{i}(j,t)|}{|{\cal
+        D}_{i}(j,t)|}c({\cal D}^{L}_{i}(j,t)) + \frac{|{\cal D}^{R}_{i}(j,t)|}{|{\cal
+        D}_{i}(j,t)|}c({\cal D}^{R}_{i}(j,t))
+  \]
+  where $D$ is the number of features, ${\cal T}_{j}$ is the set of
+  possible thresholds for feature $j$ and $c$ is the cost function.
+\end{titledslide}
+
+For regression, we typically choose $c$ to be mean squared error:
+\[
+  c({\cal D}) = \frac{1}{|{\cal D}|}\sum_{n \in \cal D} (y_{n}-\bar{y})^{2}
+\]
+where 
 
 \begin{frame}
 \frametitle{Attribute Selection in CART}
