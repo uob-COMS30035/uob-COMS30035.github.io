@@ -227,7 +227,7 @@ Assume just one hidden layer and $\sigma$ for the output activation function\dot
 
 \begin{enumerate}
 	\item \small Calculate activations of the hidden layer: $a_j = \mathlarger{\sum_{i=1}^D} w_{ji}^{(1)}x_i + w_{j0}^{(1)}$  [linear]
-	\item \small Pass it through a nonlinear function: $z_j = \sigma(a_j)$ [nonlinear]
+	\item \small Pass it through a nonlinear function: $z_j = h(a_j)$ [nonlinear]
 \uncover<2->{	\item \small Calculate activations of the output layer: $a_k = \mathlarger{\sum_{j=1}^{M}} w_{kj}^{(2)}z_j + w_{k0}^{(2)}$  [linear]
 	\item \small Compute predictions using a sigmoid: $y_k = \sigma(a_k)$ [nonlinear]}
 \uncover<3->{	\item \small All together: $y_k = \sigma \left( \mathlarger{\sum_{j=1}^M} w_{kj}^{(2)}  h \left(\mathlarger{\sum_{i=1}^D} w_{ji}^{(1)}x_i + w_{j0}^{(1)}\right) + w_{k0}^{(2)} \right)$}
@@ -292,7 +292,7 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
   \item Although all values in the network depend on the datapoint $n$
     we're focusing on, we will (like Bishop) omit the subscript $n$ from network
     values to reduce clutter.
-  \item Consider an arbitrary unit $j$ (aka `node') in an neural
+  \item Consider an arbitrary unit $j$ (aka `node') in a neural
     network.
   \item We will associate the \emph{bias} for a unit with a dummy
     input fixed to 1.
@@ -304,7 +304,7 @@ node. In the general case we could have e.g.\ $E = \sum_{k} (y_{k}-t_{k})^{2}$.
     \label{eq:preact}
     a_{j} & = \sum_{i}w_{ji}z_{i} \\
     \label{eq:act}
-    z_{j} & = h(a_{j}) \\
+    z_{j} & = h(a_{j}) 
   \end{align}
   \begin{itemize}
   \item Since $E_n$ (the error for the $n$th datapoint) only depends on
