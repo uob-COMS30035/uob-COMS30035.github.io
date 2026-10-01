@@ -1,7 +1,7 @@
 \documentclass[10pt]{beamer}
 
 \newcommand{\lectnum}{L07}
-\newcommand{\lecttitle}{Regresssion and Classification Trees}
+\newcommand{\lecttitle}{Regression and Classification Trees}
 
 \input{../preamble.tex}
 
@@ -87,7 +87,8 @@ is chosen by traversing the binary decision tree, following
 \frametitle{Learning the Tree Structure}
 \begin{itemize}
 \uncover<2->{\item Which input variable to use at each node?}
-\uncover<3->{\item Which attributes will be used to split at each node? How to determine the threshold?}
+\uncover<3->{\item How to determine the splitting value for the chosen
+  variable?}
 \uncover<4->{\item Classification and Regression Trees (CART): one of many possible learning algorithms
 \item Objective: greedily minimise the error 
 \begin{itemize}
@@ -105,7 +106,8 @@ is chosen by traversing the binary decision tree, following
 \item Greedy algorithm: add nodes one-at-a-time, choosing the best split at each point
 \begin{enumerate}
 \uncover<2->{\item Start from the root node}
-\uncover<3->{\item Run \emph{exhaustive search} over each possible variable and threshold for a new node. For each variable and threshold:
+\uncover<3->{\item Run \emph{exhaustive search} over each possible
+  variable and each possible threshold (splitting value)  for that variable. For each variable and threshold:
 \begin{itemize}
 \item Compute average of the target variable for each leaf of the proposed node
 \item Compute the error if we stop adding nodes here
@@ -121,7 +123,7 @@ is chosen by traversing the binary decision tree, following
 \begin{titledslide}{Splits at a node in the tree}
 
   We will be following the notation and explanation given by Murphy
-  since this is clearer than Bishop's.
+  since this is clearer than Bishop's (although there are typos).
   
   \begin{itemize}
   \item Suppose we are considering the best split for node $i$ in a
@@ -135,9 +137,9 @@ is chosen by traversing the binary decision tree, following
       {\cal D}^{R}_{i}(j,t) & = & \{(\mathbf{x}_{n},y_{n}) \in {\cal D}_{i} :
       x_{n,j} > t \} 
     \end{eqnarray*}
-  \item For real-valued thresholds, it's enough to consider the values
-    of feature $j$ we observe in the data.
-  \item If the $j$th feature is categorical a split on
+  \item We need only consider thresholds $t$ that are values of
+    feature $j$ observed in the data.
+  \item If the $j$th feature is categorical, a split on
     value $t$ looks like:
     \begin{eqnarray*}
       {\cal D}^{L}_{i}(j,t) & = & \{(\mathbf{x}_{n},y_{n}) \in {\cal D}_{i} :
@@ -160,44 +162,76 @@ is chosen by traversing the binary decision tree, following
         D}_{i}(j,t)|}c({\cal D}^{L}_{i}(j,t)) + \frac{|{\cal D}^{R}_{i}(j,t)|}{|{\cal
         D}_{i}(j,t)|}c({\cal D}^{R}_{i}(j,t))
   \]
-  where $D$ is the number of features, ${\cal T}_{j}$ is the set of
+  where $i$ is the current node, $D$ is the number of features, ${\cal T}_{j}$ is the set of
   possible thresholds for feature $j$ and $c$ is the cost function.
-\end{titledslide}
 
 For regression, we typically choose $c$ to be mean squared error:
 \[
   c({\cal D}) = \frac{1}{|{\cal D}|}\sum_{n \in \cal D} (y_{n}-\bar{y})^{2}
 \]
-where 
+where ${\cal D}$ is the set of datapoints reaching the leaf and
+$\bar{y} = \frac{1}{|{\cal D}|}\sum_{n \in \cal D} y_{n}$ is the mean
+of the response variable for datapoints in ${\cal D}$. (NB: there is a
+typo in Murphy for that last equation).
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Cost functions for classification}
+
+  \begin{itemize}
+  \item First compute the \emph{empirical distribution} for the data
+    in a leaf:
+  \end{itemize}
+  \[
+    \hat{\pi}_{c} = \frac{1}{|{\cal D}|}\sum_{n \in \cal D} \mathbbm{1}(y_{n}=c)
+  \]
+
+  One possible cost function is the \emph{Gini index}:
+  \[
+    G = \sum_{i=1}^{C} \hat{\pi}_{c}(1-\hat{\pi}_{c}) = 1 -
+    \sum_{i=1}^{C} \hat{\pi}_{c}^{2}
+  \]
+  Another is \emph{entropy}
+  \[
+    H = - \sum_{i=1}^{C} \hat{\pi}_{c} \log \hat{\pi}_{c}
+  \]
+
+  
+\end{titledslide}
+
+
+% \begin{frame}
+% \frametitle{Attribute Selection in CART}
+
+% \begin{itemize}
+% \item For Classification Trees:
+
+% Gini Impurity (for Classification):
+% \begin{equation}
+%     Gini(D) = 1 - \sum_{i=1}^{C} p_i^2
+% \end{equation}
+
+% Information Gain (optional): 
+% \begin{equation}
+% IG(D, A) = Entropy(D) - \sum_{v \in Splits} \frac{|D_v|}{|D|} \, Entropy(D_v)
+% \end{equation}
+
+% \item For Regression Trees:
+% \begin{equation}
+%     MSE(D) = \frac{1}{|D|} \sum_{i=1}^{|D|} (y_i - \bar{y})^2
+% \end{equation}
+
+% \end{itemize}
+
+%\end{frame}
+
 
 \begin{frame}
-\frametitle{Attribute Selection in CART}
+  \frametitle{Example of Information Gain Calculation}
 
-\begin{itemize}
-\item For Classification Trees:
-
-Gini Impurity (for Classification):
-\begin{equation}
-    Gini(D) = 1 - \sum_{i=1}^{C} p_i^2
-\end{equation}
-
-Information Gain (optional): 
-\begin{equation}
-IG(D, A) = Entropy(D) - \sum_{v \in Splits} \frac{|D_v|}{|D|} \, Entropy(D_v)
-\end{equation}
-
-\item For Regression Trees:
-\begin{equation}
-    MSE(D) = \frac{1}{|D|} \sum_{i=1}^{|D|} (y_i - \bar{y})^2
-\end{equation}
-
-\end{itemize}
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Example of Information Gain Calculation}
+  We can view using entropy as trying to maximise the
+  \emph{information gained} by choosing a split.
+  
 \centering\includegraphics[width=1\textwidth]{figures/pic2.png}
 \end{frame}
 
@@ -235,7 +269,11 @@ IG(D, A) = Entropy(D) - \sum_{v \in Splits} \frac{|D_v|}{|D|} \, Entropy(D_v)
 % C is criterion
 % e is error
 % lambda is the tradeoff between tree size and error
-\uncover<4->{\item If $C(T) \leq C(T_0)$ keep the pruned tree, else reinstate the pruned node.}
+\uncover<4->{\item If $C(T) \leq C(T_0)$ keep the pruned tree, else
+  reinstate the pruned node.}
+\uncover<5->{\item The hyperparameter $\lambda$ can be chosen
+ using a validation set or via cross-validation
+}
 \end{itemize}
 
 \end{frame}
