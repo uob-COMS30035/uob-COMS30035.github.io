@@ -84,7 +84,7 @@ where $\gamma(z_{nk}) = p(z_{k}=1|\xvec_{n})$ and $N_{k} = \sum_{n=1}^{N} \gamma
 {\bm \Sigma}_{k}^{\mbox{new}} & = & \frac{1}{N_{k}} \sum_{n=1}^{N} \gamma(z_{nk}) (\xvec_{n} - \bmu_{k}^{\mbox{new}})(\xvec_{n} - \bmu_{k}^{\mbox{new}})^{T} \\
 \pi_{k}^{\mbox{new}} & = & \frac{N_{k}}{N}
 \end{eqnarray*}
-
+where  $N_{k} = \sum_{n=1}^{N}\gamma(z_{nk}) $
 
 \end{titledslide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -174,7 +174,7 @@ The same equation in different notation is:
   \item   $\mathrm{KL}(p_{1} || p_{2})$ denotes the
     \emph{Kullback-Leibler divergence} between probability
     distributions $p_1$ and $p_2$.
-  \item KL-divergence is important in, e.g., information theory.
+  \item KL-divergence is important in information theory.
   \item It's a bit like a `distance' between two distributions.
   \item But it is not a true distance since, for example, it is not
     symmetric.

@@ -71,7 +71,7 @@
 
 \begin{itemize}
   \item We want each point $\xvec_n$ to be close to its assigned cluster mean $\bmu_k$.
-  \item Objective: minimize total squared distance to cluster centers.
+  \item Objective: minimize total squared distance to cluster centres.
 \end{itemize}
 
 \[
@@ -81,7 +81,7 @@ J = \sum_{n=1}^{N} \sum_{k=1}^{K} r_{nk} \, \lVert \xvec_n - \bmu_k \rVert^2
 \begin{itemize}
   \item Optimize by alternating:
     \begin{enumerate}
-      \item Initialize $K$ centers.
+      \item Initialize $K$ centres.
       \item Repeat until convergence (cluster assignments stop changing).
         \begin{itemize}
             \item \textbf{E-step:} Assign each $\xvec_n$ to its nearest $\bmu_k$.
